@@ -4,8 +4,8 @@ import "./index.css"; // If needed for extra styling
 const TopContributions = () => {
   return (
     <section className="contributions-section">
-      <div className="research-content projects-content">
-      <h3>Recent Achievements</h3><br/>
+      <div className="research-content">
+      <h2>Recent Achievements</h2><br/>
       <br/>
         <h3>Students</h3><br/>
         <div className="card-container">
@@ -30,8 +30,8 @@ const TopContributions = () => {
         </div>
       </div>
 
-      <div className="research-content achievements-content">
-        <h3>Best Projects</h3><br/>
+      <div className="research-content">
+        <h2>Best Projects</h2><br/>
         <h3>Students</h3><br/>
         <div className="card-container">
           {Array.from({ length: 5 }).map((_, index) => (
@@ -55,8 +55,8 @@ const TopContributions = () => {
         </div>
       </div>
 
-      <div className="research-content research-topics-content">
-        <h3>Top 5 Ongoing Research Topics</h3><br/>
+      <div className="research-content">
+        <h2>Top 5 Ongoing Research Topics</h2><br/>
         <h3>Students</h3><br/>
         <div className="card-container">
           {Array.from({ length: 5 }).map((_, index) => (

@@ -286,6 +286,61 @@ const SignUp = () => {
         }
     };
 
+    const handleResendOtp = async () => {
+        setIsLoading(true);
+        setError(null);
+        setSuccess(null);
+    
+        try {
+            console.log('Sending OTP resend request for:', verificationEmail);
+    
+            const resendOtpPayload = {
+                email: verificationEmail,
+                name: registerData.name,
+                phone_number: registerData.phone_number,
+                user_type: registerData.user_type
+            };
+    
+            const token = localStorage.getItem('access_token');
+    
+            const response = await fetch(apiConfig.getUrl('api/auth/resend_otp/'), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    ...(token && { Authorization: `Bearer ${token}` }) 
+                },
+                body: JSON.stringify(resendOtpPayload)
+            });
+    
+            const responseText = await response.text();
+            console.log('Raw OTP resend response:', responseText);
+    
+            let data;
+            try {
+                data = JSON.parse(responseText);
+            } catch (e) {
+                console.error('Failed to parse response as JSON:', e);
+                throw new Error('Received invalid response from server');
+            }
+    
+            if (!response.ok) {
+                throw new Error(data.detail || 'Failed to resend OTP');
+            }
+    
+            console.log('OTP resend successful:', data);
+            setSuccess('A new OTP has been sent to your email.');
+    
+        } catch (err) {
+            console.error('OTP resend error:', err);
+            setError(err.message || 'Failed to resend OTP. Please try again.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    
+    
+
     // Function to handle OTP input change
     const handleOtpChange = (e) => {
         setOtpValue(e.target.value);
@@ -320,30 +375,38 @@ const SignUp = () => {
 
             {/* OTP Verification Popup */}
             {showOtpPopup && (
-                <div className="otp-popup-overlay">
-                    <div className="otp-popup">
-                        <h2>Verify Your Email</h2>
-                        <p>Enter the OTP sent to your email: {verificationEmail}</p>
-                        <form onSubmit={handleVerifyOtp}>
-                            <input
-                                type="text"
-                                placeholder="Enter OTP"
-                                value={otpValue}
-                                onChange={handleOtpChange}
-                                required
-                            />
-                            <div className="otp-popup-buttons">
-                                <button type="submit" disabled={isLoading}>
-                                    {isLoading ? 'Verifying...' : 'Verify OTP'}
-                                </button>
-                                <button type="button" onClick={handleCloseOtpPopup}>
-                                    Cancel
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+    <div className="otp-popup-overlay">
+        <div className="otp-popup">
+            <h2>Verify Your Email</h2>
+            <p>Enter the OTP sent to your email: {verificationEmail}</p>
+            <form onSubmit={handleVerifyOtp}>
+                <input
+                    type="text"
+                    placeholder="Enter OTP"
+                    value={otpValue}
+                    onChange={handleOtpChange}
+                    required
+                />
+                <div className="otp-popup-buttons">
+                    <button type="submit" disabled={isLoading}>
+                        {isLoading ? 'Verifying...' : 'Verify OTP'}
+                    </button>
+                    <button type="button" onClick={handleCloseOtpPopup}>
+                        Cancel
+                    </button>
                 </div>
-            )}
+            </form>
+            <button 
+                className="resend-otp-btn"
+                onClick={handleResendOtp}
+                disabled={isLoading}
+            >
+                {isLoading ? 'Resending...' : 'Resend OTP'}
+            </button>
+        </div>
+    </div>
+)}
+
 
             {activeTab === 'login' ? (
                 <form className="form-container" onSubmit={handleLogin}>

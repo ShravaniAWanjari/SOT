@@ -14,7 +14,9 @@ const SignUp = () => {
         name: '',
         username: '',
         email: '',
-        password: ''
+        password: '',
+        phone_number: '',
+        user_type: 'STUDENT' // Default to STUDENT
     });
     
     const [isLoading, setIsLoading] = useState(false);
@@ -174,6 +176,10 @@ const SignUp = () => {
                     errorMessage = `Username: ${data.username[0]}`;
                 } else if (data.password) {
                     errorMessage = `Password: ${data.password[0]}`;
+                } else if (data.phone_number) {
+                    errorMessage = `Phone Number: ${data.phone_number[0]}`;
+                } else if (data.user_type) {
+                    errorMessage = `User Type: ${data.user_type[0]}`;
                 } else if (data.non_field_errors) {
                     errorMessage = data.non_field_errors[0];
                 } else if (data.detail) {
@@ -190,7 +196,9 @@ const SignUp = () => {
                 name: '',
                 username: '',
                 email: '',
-                password: ''
+                password: '',
+                phone_number: '',
+                user_type: 'STUDENT'
             });
             
             setActiveTab('login');
@@ -258,19 +266,12 @@ const SignUp = () => {
                     <input 
                         type="text" 
                         name="name"
-                        placeholder="Name" 
+                        placeholder="Full Name" 
                         value={registerData.name}
                         onChange={handleRegisterChange}
                         required
                     />
-                    <input 
-                        type="text" 
-                        name="username"
-                        placeholder="Username" 
-                        value={registerData.username}
-                        onChange={handleRegisterChange}
-                        required
-                    />
+                    
                     <input 
                         type="email" 
                         name="email"
@@ -287,6 +288,24 @@ const SignUp = () => {
                         onChange={handleRegisterChange}
                         required
                     />
+                    <input 
+                        type="tel" 
+                        name="phone_number"
+                        placeholder="Phone Number" 
+                        value={registerData.phone_number}
+                        onChange={handleRegisterChange}
+                        required
+                    />
+                    <select
+                        name="user_type"
+                        value={registerData.user_type}
+                        onChange={handleRegisterChange}
+                        required
+                        className="form-select"
+                    >
+                        <option value="STUDENT">Student</option>
+                        <option value="FACULTY">Faculty</option>
+                    </select>
                     <button type="submit" disabled={isLoading}>
                         {isLoading ? 'Signing Up...' : 'Sign Up'}
                     </button>

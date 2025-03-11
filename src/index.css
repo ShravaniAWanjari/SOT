@@ -372,6 +372,154 @@ body {
   padding: 1rem; /* Padding inside the card */
   width: calc(30% - 1rem); /* Adjust width as needed */
   box-shadow: 0 2px 5px rgba(238, 237, 237, 0.5); /* Subtle shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(238, 237, 237, 0.8);
+}
+
+.view-details-btn {
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin-top: 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.view-details-btn:hover {
+  background-color: #555;
+}
+
+/* Project Popup Styles */
+.project-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.project-popup-content {
+  background-color: #222;
+  color: white;
+  border-radius: 8px;
+  padding: 2rem;
+  max-width: 800px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 5px 30px rgba(255, 255, 255, 0.2);
+}
+
+.close-popup {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.close-popup:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.project-popup-content h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.8rem;
+  color: white;
+}
+
+.popup-author {
+  color: #aaa;
+  margin-bottom: 1.5rem;
+  font-style: italic;
+}
+
+.popup-description {
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.popup-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.popup-section {
+  flex: 1;
+  min-width: 200px;
+}
+
+.popup-section h4 {
+  color: #ddd;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  border-bottom: 1px solid #444;
+  padding-bottom: 0.5rem;
+}
+
+.popup-section ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.popup-section li {
+  padding: 0.5rem 0;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.popup-section li:before {
+  content: "•";
+  color: #777;
+  position: absolute;
+  left: 0;
+}
+
+/* Mobile Responsiveness for Popup */
+@media (max-width: 768px) {
+  .project-popup-content {
+    width: 95%;
+    padding: 1.5rem;
+  }
+  
+  .popup-details {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .project-popup-content h3 {
+    font-size: 1.5rem;
+  }
 }
 
 /* Contributions section */

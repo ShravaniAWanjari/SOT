@@ -36,9 +36,9 @@ body {
   padding: 1rem;
   padding-right: 2rem;
   background-color: #000000;
-  position: relative;  /* Add this */
-  z-index: 10;        /* Add this to keep navbar above overlay */
-  height: 80px;       /* Add fixed height */
+  position: relative;
+  z-index: 10;
+  height: 80px;
 }
 
 .nav-links {
@@ -54,6 +54,57 @@ body {
 .logo img {
   height: 40px;
 }
+
+.hamburger {
+  display: none;
+  font-size: 24px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 250px;
+  height: 100vh;
+  background: #111;
+  display: flex;
+  flex-direction: column;
+  padding-top: 60px;
+  transition: right 0.3s ease-in-out;
+}
+
+.mobile-menu.open {
+  right: 0;
+}
+
+.mobile-menu a {
+  color: white;
+  padding: 15px;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+}
+
+.close-icon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+  .hamburger {
+    display: block;
+  }
+}
+
 
 /* Hero Section Styles */
 .hero-section {
@@ -265,7 +316,17 @@ body {
 .otp-popup-buttons button:last-child:hover {
   background-color: #d32f2f;
 }
-
+.resend-otp-btn {
+  background-color: white;
+  padding-top: 100px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s ease-in-out;
+  font-weight: 600;
+}
 .tabs {
   display: flex;
   justify-content: center;

@@ -331,6 +331,7 @@ const SignUp = () => {
             console.log('OTP resend successful:', data);
             setSuccess('A new OTP has been sent to your email.');
     
+    
         } catch (err) {
             console.error('OTP resend error:', err);
             setError(err.message || 'Failed to resend OTP. Please try again.');
@@ -338,6 +339,7 @@ const SignUp = () => {
             setIsLoading(false);
         }
     };
+    
     
     
 
@@ -375,8 +377,8 @@ const SignUp = () => {
 
             {/* OTP Verification Popup */}
             {showOtpPopup && (
-    <div className="otp-popup-overlay">
-        <div className="otp-popup">
+            <div className="otp-popup-overlay">
+             <div className="otp-popup">
             <h2>Verify Your Email</h2>
             <p>Enter the OTP sent to your email: {verificationEmail}</p>
             <form onSubmit={handleVerifyOtp}>

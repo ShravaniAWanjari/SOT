@@ -10,8 +10,6 @@ const HomePage = () => {
         <navbar />
         <div className="hero-section">
         <img src={`${import.meta.env.BASE_URL}images/image2.jpg`} alt="School of Technology" className="hero-image" />
-
-        <div className="hero-overlay"></div>
         </div>
       <div className="research-section">
         <div className="research-content">

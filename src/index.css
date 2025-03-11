@@ -359,14 +359,14 @@ body {
         padding: 2rem 0; /* Adjust padding for the section */
     }
     .hero-section {
-      height: 40vh; /* Adjust height for smaller screens */
+      object-fit:contain; /* Ensure the image covers the section */
+      width: 100vw;
+      height: auto;
   }
 
   .hero-image {
-      object-fit:contain; /* Ensure the image covers the section */
-  }
-  .hero-overlay{
-    object-fit: contain;
+    width: 100vw;
+    height: auto;
   }
 
   .research-content h2 {

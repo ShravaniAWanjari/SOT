@@ -232,13 +232,13 @@ body {
   letter-spacing: 2px;
 }
 
-.otp-buttons {
+.otp-popup-buttons {
   display: flex;
   gap: 10px;
   justify-content: center;
 }
 
-.otp-buttons button {
+.otp-popup-buttons button {
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -248,22 +248,22 @@ body {
   font-weight: 600;
 }
 
-.otp-buttons button:first-child {
-  background: #ba2c3a;
+.otp-popup-buttons button:first-child {
+  background-color: #4CAF50;
   color: white;
 }
 
-.otp-buttons button:first-child:hover {
-  background: #dc3545;
+.otp-popup-buttons button:first-child:hover {
+  background-color: #45a049;
 }
 
-.otp-buttons button:last-child {
-  background: #f1f1f1;
-  color: #333;
+.otp-popup-buttons button:last-child {
+  background-color: #f44336;
+  color: white;
 }
 
-.otp-buttons button:last-child:hover {
-  background: #ddd;
+.otp-popup-buttons button:last-child:hover {
+  background-color: #d32f2f;
 }
 
 .tabs {

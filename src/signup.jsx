@@ -1,132 +1,424 @@
 import React, { useState } from 'react';
 import './index.css';
+import apiConfig from "./config/apiconfig";
 
 const SignUp = () => {
     const [activeTab, setActiveTab] = useState('login');
-    const [showOTPPopup, setShowOTPPopup] = useState(false);
-    const [otpValue, setOtpValue] = useState('');
-    const [registrationData, setRegistrationData] = useState({
-        name: '',
-        username: '',
+
+    const [loginData, setLoginData] = useState({
         email: '',
         password: ''
     });
 
-    // Handle registration form changes
-    const handleRegistrationChange = (e) => {
+    const [registerData, setRegisterData] = useState({
+        name: '',
+        username: '',
+        email: '',
+        password: '',
+        phone_number: '',
+        user_type: 'STUDENT' // Default to STUDENT
+    });
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
+    
+    // New state for OTP popup
+    const [showOtpPopup, setShowOtpPopup] = useState(false);
+    const [otpValue, setOtpValue] = useState('');
+    const [verificationEmail, setVerificationEmail] = useState('');
+
+    const handleLoginChange = (e) => {
         const { name, value } = e.target;
-        setRegistrationData({ ...registrationData, [name]: value });
+        setLoginData({
+            ...loginData,
+            [name]: value
+        });
     };
 
-    // Handle sign up button click
-    const handleSignUp = (e) => {
+    const handleRegisterChange = (e) => {
+        const { name, value } = e.target;
+        setRegisterData({
+            ...registerData,
+            [name]: value
+        });
+    };
+
+    const handleLogin = async (e) => {
         e.preventDefault();
-        // Show OTP popup after validating initial form data
-        if (registrationData.name && registrationData.username && registrationData.email && registrationData.password) {
-            // In a real application, you would send the registration data to the server
-            // and the server would send an OTP to the user's email/phone
-            // For demo purposes, we just show the OTP popup
-            setShowOTPPopup(true);
-        } else {
-            alert('Please fill in all the required fields');
+        setIsLoading(true);
+        setError(null);
+        setSuccess(null);
+
+        try {
+            console.log('Sending login request with:', loginData);
+
+            const response = await fetch(apiConfig.getUrl('api/auth/login/'), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(loginData)
+            });
+
+            const responseText = await response.text();
+            console.log('Raw response:', responseText);
+
+            let data;
+            try {
+                data = JSON.parse(responseText);
+            } catch (e) {
+                console.error('Failed to parse response as JSON:', e);
+                throw new Error('Received invalid response from server');
+            }
+
+            if (!response.ok) {
+                const errorMessage = data.detail || 
+                                    data.non_field_errors || 
+                                    (data.email && data.email[0]) || 
+                                    (data.password && data.password[0]) || 
+                                    'Login failed';
+
+                throw new Error(typeof errorMessage === 'string' ? 
+                    errorMessage : JSON.stringify(errorMessage));
+            }
+
+            console.log('Login successful, received:', data);
+
+            if (data.access) {
+                // Store JWT tokens
+                localStorage.setItem('access_token', data.access);
+
+                if (data.refresh) {
+                    localStorage.setItem('refresh_token', data.refresh);
+                }
+
+                if (data.user) {
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                }
+
+                console.log('JWT authentication data saved');
+                setSuccess('Login successful!');
+
+                // redirect the user here or update app state
+                // window.location.href = '/dashboard';
+            } else {
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                    if (data.user) {
+                        localStorage.setItem('user', JSON.stringify(data.user));
+                    }
+                    console.log('Authentication data saved (legacy format)');
+                    setSuccess('Login successful!');
+                } else {
+                    throw new Error('No authentication token received from server');
+                }
+            }
+        } catch (err) {
+            console.error('Login error:', err);
+
+            if (err.message === 'Failed to fetch') {
+                setError('Cannot connect to the server. Please check your internet connection or if the server is running.');
+            } else {
+                setError(err.message || 'Something went wrong. Please try again.');
+            }
+        } finally {
+            setIsLoading(false);
         }
     };
 
-    // Handle OTP verification
-    const handleVerifyOTP = () => {
-        // In a real application, you would verify the OTP against what was sent
-        // For demo purposes, we just check if it's not empty
-        if (otpValue) {
-            // Complete the registration process
-            alert('Registration successful! You can now login.');
-            setShowOTPPopup(false);
-            setActiveTab('login');
-            // Reset form data
-            setRegistrationData({
+    const getCookie = (name) => {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    };
+
+    const handleRegister = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        setError(null);
+        setSuccess(null);
+
+        try {
+            console.log('Sending registration request with:', registerData);
+
+            const response = await fetch(apiConfig.getUrl('api/auth/register/'), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(registerData)
+            });
+
+            const responseText = await response.text();
+            console.log('Raw response:', responseText);
+
+            let data;
+            try {
+                data = JSON.parse(responseText);
+            } catch (e) {
+                console.error('Failed to parse response as JSON:', e);
+                throw new Error('Received invalid response from server');
+            }
+
+            if (!response.ok) {
+                let errorMessage = 'Registration failed';
+
+                if (data.email) {
+                    errorMessage = `Email: ${data.email[0]}`;
+                } else if (data.username) {
+                    errorMessage = `Username: ${data.username[0]}`;
+                } else if (data.password) {
+                    errorMessage = `Password: ${data.password[0]}`;
+                } else if (data.phone_number) {
+                    errorMessage = `Phone Number: ${data.phone_number[0]}`;
+                } else if (data.user_type) {
+                    errorMessage = `User Type: ${data.user_type[0]}`;
+                } else if (data.non_field_errors) {
+                    errorMessage = data.non_field_errors[0];
+                } else if (data.detail) {
+                    errorMessage = data.detail;
+                }
+
+                throw new Error(errorMessage);
+            }
+
+            console.log('Registration successful:', data);
+            setSuccess('Registration successful! Please verify your email with OTP.');
+
+            // Show OTP popup after successful registration
+            setVerificationEmail(registerData.email);
+            setShowOtpPopup(true);
+
+        } catch (err) {
+            console.error('Registration error:', err);
+
+            if (err.message === 'Failed to fetch') {
+                setError('Cannot connect to the server. Please check your internet connection.');
+            } else {
+                setError(err.message || 'Registration failed. Please try again.');
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // New function to handle OTP verification
+    const handleVerifyOtp = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            const verificationData = {
+                email: verificationEmail,
+                otp: otpValue
+            };
+
+            console.log('Sending OTP verification request with:', verificationData);
+
+            const response = await fetch(apiConfig.getUrl('api/auth/verify_otp/'), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(verificationData)
+            });
+
+            const responseText = await response.text();
+            console.log('Raw OTP verification response:', responseText);
+
+            let data;
+            try {
+                data = JSON.parse(responseText);
+            } catch (e) {
+                console.error('Failed to parse response as JSON:', e);
+                throw new Error('Received invalid response from server');
+            }
+
+            if (!response.ok) {
+                const errorMessage = data.detail || 'OTP verification failed';
+                throw new Error(errorMessage);
+            }
+
+            console.log('OTP verification successful:', data);
+            setSuccess('Email verified successfully! You can now log in.');
+
+            // Reset the form and close OTP popup
+            setRegisterData({
                 name: '',
                 username: '',
                 email: '',
-                password: ''
+                password: '',
+                phone_number: '',
+                user_type: 'STUDENT'
             });
             setOtpValue('');
-        } else {
-            alert('Please enter the OTP');
+            setShowOtpPopup(false);
+
+            // Redirect to login if status code is 201
+            if (response.status === 201) {
+                setActiveTab('login');
+            }
+
+        } catch (err) {
+            console.error('OTP verification error:', err);
+
+            if (err.message === 'Failed to fetch') {
+                setError('Cannot connect to the server. Please check your internet connection.');
+            } else {
+                setError(err.message || 'OTP verification failed. Please try again.');
+            }
+        } finally {
+            setIsLoading(false);
         }
     };
 
-    // OTP Popup Component
-    const OTPPopup = () => {
-        return (
-            <div className="otp-popup-overlay">
-                <div className="otp-popup">
-                    <h2>Verify your account</h2>
-                    <p>Please enter the OTP sent to your email/phone</p>
-                    <input 
-                        type="text" 
-                        placeholder="Enter OTP" 
-                        value={otpValue}
-                        onChange={(e) => setOtpValue(e.target.value)}
-                        maxLength={6}
-                    />
-                    <div className="otp-buttons">
-                        <button onClick={handleVerifyOTP}>Verify</button>
-                        <button onClick={() => setShowOTPPopup(false)}>Cancel</button>
-                    </div>
-                </div>
-            </div>
-        );
+    // Function to handle OTP input change
+    const handleOtpChange = (e) => {
+        setOtpValue(e.target.value);
+    };
+
+    // Function to close OTP popup
+    const handleCloseOtpPopup = () => {
+        setShowOtpPopup(false);
+        setActiveTab('login');
     };
 
     return (
         <div className="auth-container">
             <div className="tabs">
-                <button className={activeTab === 'login' ? 'active' : ''} onClick={() => setActiveTab('login')}>Login</button>
-                <button className={activeTab === 'register' ? 'active' : ''} onClick={() => setActiveTab('register')}>Register</button>
+                <button 
+                    className={activeTab === 'login' ? 'active' : ''} 
+                    onClick={() => setActiveTab('login')}
+                >
+                    Login
+                </button>
+                <button 
+                    className={activeTab === 'register' ? 'active' : ''} 
+                    onClick={() => setActiveTab('register')}
+                >
+                    Register
+                </button>
             </div>
 
-            {activeTab === 'login' ? (
-                <div className="form-container">
-                    <h2>Login</h2>
-                    <input type="email" placeholder="Email" />
-                    <input type="password" placeholder="Password" />
-                    <button>Sign In</button>
+            {/* Status messages */}
+            {error && <div className="error-message">{error}</div>}
+            {success && <div className="success-message">{success}</div>}
+
+            {/* OTP Verification Popup */}
+            {showOtpPopup && (
+                <div className="otp-popup-overlay">
+                    <div className="otp-popup">
+                        <h2>Verify Your Email</h2>
+                        <p>Enter the OTP sent to your email: {verificationEmail}</p>
+                        <form onSubmit={handleVerifyOtp}>
+                            <input
+                                type="text"
+                                placeholder="Enter OTP"
+                                value={otpValue}
+                                onChange={handleOtpChange}
+                                required
+                            />
+                            <div className="otp-popup-buttons">
+                                <button type="submit" disabled={isLoading}>
+                                    {isLoading ? 'Verifying...' : 'Verify OTP'}
+                                </button>
+                                <button type="button" onClick={handleCloseOtpPopup}>
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            ) : (
-                <div className="form-container">
-                    <h2>Register</h2>
-                    <input 
-                        type="text" 
-                        name="name"
-                        placeholder="Name" 
-                        value={registrationData.name}
-                        onChange={handleRegistrationChange}
-                    />
-                    <input 
-                        type="text" 
-                        name="username"
-                        placeholder="Username" 
-                        value={registrationData.username}
-                        onChange={handleRegistrationChange}
-                    />
+            )}
+
+            {activeTab === 'login' ? (
+                <form className="form-container" onSubmit={handleLogin}>
+                    <h2>Login</h2>
                     <input 
                         type="email" 
                         name="email"
                         placeholder="Email" 
-                        value={registrationData.email}
-                        onChange={handleRegistrationChange}
+                        value={loginData.email}
+                        onChange={handleLoginChange}
+                        required
                     />
                     <input 
                         type="password" 
                         name="password"
                         placeholder="Password" 
-                        value={registrationData.password}
-                        onChange={handleRegistrationChange}
+                        value={loginData.password}
+                        onChange={handleLoginChange}
+                        required
                     />
-                    <button onClick={handleSignUp}>Sign Up</button>
-                </div>
-            )}
+                    <button type="submit" disabled={isLoading}>
+                        {isLoading ? 'Signing In...' : 'Sign In'}
+                    </button>
+                </form>
+            ) : (
+                <form className="form-container" onSubmit={handleRegister}>
+                    <h2>Register</h2>
+                    <input 
+                        type="text" 
+                        name="name"
+                        placeholder="Full Name" 
+                        value={registerData.name}
+                        onChange={handleRegisterChange}
+                        required
+                    />
 
-            {showOTPPopup && <OTPPopup />}
+                    <input 
+                        type="email" 
+                        name="email"
+                        placeholder="Email" 
+                        value={registerData.email}
+                        onChange={handleRegisterChange}
+                        required
+                    />
+                    <input 
+                        type="password" 
+                        name="password"
+                        placeholder="Password" 
+                        value={registerData.password}
+                        onChange={handleRegisterChange}
+                        required
+                    />
+                    <input 
+                        type="tel" 
+                        name="phone_number"
+                        placeholder="Phone Number" 
+                        value={registerData.phone_number}
+                        onChange={handleRegisterChange}
+                        required
+                    />
+                    <select
+                        name="user_type"
+                        value={registerData.user_type}
+                        onChange={handleRegisterChange}
+                        required
+                        className="form-select"
+                    >
+                        <option value="STUDENT">Student</option>
+                        <option value="FACULTY">Faculty</option>
+                    </select>
+                    <button type="submit" disabled={isLoading}>
+                        {isLoading ? 'Signing Up...' : 'Sign Up'}
+                    </button>
+                </form>
+            )}
         </div>
     );
 };

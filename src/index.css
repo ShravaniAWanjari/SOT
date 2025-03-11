@@ -11,7 +11,23 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  width: 100%;
+  overflow-x: hidden;
 }
+
+/* Page Layout */
+.page-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content-container {
+  width: 100%;
+  display: block; /* Ensures full width layout for content */
+}
+
 /* Navbar Styles */
 .navbar {
   display: flex;
@@ -41,17 +57,65 @@ body {
 
 /* Hero Section Styles */
 .hero-section {
-  position: relative; /* Position relative for absolute positioning of overlay */
+  position: relative;
   width: 100%;
-  height: 100vh; /* Full height of the viewport */
-  overflow: hidden; /* Hide overflow */
+  height: 100vh;
+  overflow: hidden;
+  background-color: #000000; /* Dark fallback color while image loads */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-image-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
 .hero-image {
-  width: 100%;
+  width: auto;
   height: 100%;
-  object-fit: cover; /* Cover the entire section */
-  object-position: center; /* Center the image */
+  object-fit: contain; /* Changed from cover to contain to prevent cropping */
+  max-width: 100%;
+  margin: 0 auto;
+  display: block;
+}
+
+/* Media query for large screens */
+@media (min-width: 1400px) {
+  .hero-image {
+    object-fit: contain; /* Use contain instead of cover */
+    margin: 0 auto;
+    display: block;
+    max-height: 100vh;
+  }
+}
+
+/* For ultrawide screens - fixed syntax */
+@media (min-width: 2000px), (min-aspect-ratio: 21/9) {
+  .hero-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .hero-image {
+    object-fit: contain;
+    max-height: 100vh;
+    width: auto; /* Allow width to be determined by height constraint */
+    max-width: 100%;
+  }
+}
+
+/* For wider, but not ultra-wide screens */
+@media (min-width: 1200px) and (max-width: 1999px) {
+  .hero-image {
+    object-fit: contain;
+  }
 }
 
 .hero-overlay {
@@ -71,8 +135,6 @@ body {
   margin: 0 auto;
 }
 
-
-
 /* You can keep the MDB imports in index.jsx */
 
 /* ... existing styles ... */
@@ -82,7 +144,7 @@ body {
   background-color: #000000;
   color: white;
   padding: 4rem 0;
-  padding-bottom: 200px;
+  width: 100%;
 }
 
 .research-content {
@@ -90,6 +152,7 @@ body {
   margin: 0 auto;
   padding: 0 2rem;
   padding-top: 2rem;
+  width: 100%;
 }
 
 .research-content h2 {
@@ -108,7 +171,6 @@ body {
 .research-content p:last-child {
   margin-bottom: 0;
 }
-
 
 .auth-container {
   width: 400px;
@@ -294,12 +356,15 @@ body {
   background: #dc3545;
 }
 
-
-
+/* Card container */
 .card-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 2rem; /* Space between cards */
+  justify-content: space-between;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .card {
@@ -309,19 +374,18 @@ body {
   box-shadow: 0 2px 5px rgba(238, 237, 237, 0.5); /* Subtle shadow */
 }
 
+/* Contributions section */
 .contributions-section{
-  background-color: #000000;
-  color: white;
   padding: 4rem 0;
-  padding-bottom: 200px;
+  color: white;
+  background-color: #000000;
+  width: 100%;
 }
 
 .projects-content h2,
 .achievements-content h2 {
   color: rgb(255, 255, 255); /* Black font for projects and achievements */
 }
-
-
 
 /* Card text color */
 .card h4 {
@@ -332,7 +396,6 @@ body {
 .research-content h2 {
   margin: 1.5rem 0; /* Adjust the top and bottom margin as needed */
 }
-
 
 .card p {
   font-size: 0.9rem; /* Smaller font size for description */
@@ -358,36 +421,28 @@ body {
     .contributions-section {
         padding: 2rem 0; /* Adjust padding for the section */
     }
+    
     .hero-section {
-      object-fit:contain; /* Ensure the image covers the section */
-      width: 100vw;
-      height: auto;
-  }
+        height: 60vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-  .hero-image {
-    width: 100vw;
-    height: auto;
-  }
+    .hero-image {
+        width: auto;
+        max-width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
 
-  .research-content h2 {
-      font-size: 2rem; /* Adjust heading size for smaller screens */
-  }
+    .research-content h2 {
+        font-size: 2rem; /* Adjust heading size for smaller screens */
+    }
 
-  .research-content p {
-      font-size: 1rem; /* Adjust paragraph size for smaller screens */
-  }
-
-  .card {
-      width: calc(45% - 1rem); /* Adjust card width for smaller screens */
-  }
-
-  .card-container {
-      gap: 1rem; /* Reduce gap between cards */
-  }
-
-  .contributions-section {
-      padding: 2rem 0; /* Adjust padding for the section */
-  }
+    .research-content p {
+        font-size: 1rem; /* Adjust paragraph size for smaller screens */
+    }
 }
 
 /* For mobile devices */
@@ -402,6 +457,20 @@ body {
 
     .contributions-section {
         padding: 1rem 0; /* Further adjust padding for mobile */
+    }
+    
+    .hero-section {
+        height: 50vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .hero-image {
+        width: auto;
+        max-width: 100%;
+        height: 100%;
+        object-fit: contain;
     }
 
     .projects-content h2,

@@ -182,6 +182,90 @@ body {
   background: #fff;
 }
 
+/* OTP Popup Styles */
+.otp-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.otp-popup {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+  position: relative;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.otp-popup h2 {
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 22px;
+}
+
+.otp-popup p {
+  margin-bottom: 20px;
+  color: #666;
+  font-size: 14px;
+}
+
+.otp-popup input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 18px;
+  background: #f8f8f8;
+  margin-bottom: 20px;
+  text-align: center;
+  letter-spacing: 2px;
+}
+
+.otp-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.otp-buttons button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s ease-in-out;
+  font-weight: 600;
+}
+
+.otp-buttons button:first-child {
+  background: #ba2c3a;
+  color: white;
+}
+
+.otp-buttons button:first-child:hover {
+  background: #dc3545;
+}
+
+.otp-buttons button:last-child {
+  background: #f1f1f1;
+  color: #333;
+}
+
+.otp-buttons button:last-child:hover {
+  background: #ddd;
+}
+
 .tabs {
   display: flex;
   justify-content: center;
@@ -261,36 +345,7 @@ body {
 .form-container button:hover {
   background: #dc3545;
 }
-/* Add these styles to your index.css file */
 
-.form-select {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-  background-color: white;
-  box-sizing: border-box;
-}
-
-.form-select:focus {
-  border-color: #4a90e2;
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
-}
-
-/* Optional: Style the dropdown arrow */
-.form-select {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  background-size: 1em;
-  padding-right: 30px;
-}
 /* Contact Us Section Styles */
 .contact-section {
   background-color: #000000;

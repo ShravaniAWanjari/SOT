@@ -7,7 +7,7 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="logo">
       <Link to="/">
-      <img src='image1.svg'alt="Logo" />
+      <img src={`${import.meta.env.BASE_URL}images/image1.svg`} alt="Logo" />
       </Link>
       </div>
       <div className="nav-links">

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './index.css';
+import Forms from "./forms";
 import apiConfig from "./config/apiconfig";
 
 const SignUp = () => {
@@ -102,7 +103,7 @@ const SignUp = () => {
                 setSuccess('Login successful!');
 
                 // redirect the user here or update app state
-                // window.location.href = '/dashboard';
+                window.location.href = 'SOT/forms#/forms';
             } else {
                 if (data.token) {
                     localStorage.setItem('token', data.token);

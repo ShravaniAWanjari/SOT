@@ -36,23 +36,102 @@ body {
   padding: 1rem;
   padding-right: 2rem;
   background-color: #000000;
-  position: relative;  /* Add this */
-  z-index: 10;        /* Add this to keep navbar above overlay */
-  height: 80px;       /* Add fixed height */
+  position: fixed;  /* Changed from relative to fixed for better UX */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  height: 80px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);  /* Subtle shadow for depth */
+  transition: all 0.3s ease;  /* Smooth transitions */
+}
+
+.navbar.scrolled {
+  background-color: rgba(0, 0, 0, 0.9);  /* Slightly transparent when scrolled */
+  height: 70px;  /* Slightly smaller when scrolled */
 }
 
 .nav-links {
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;  /* Increased spacing between links */
+  align-items: center;
 }
 
 .nav-links a {
   text-decoration: none;
   color: #f5f5f5;
+  font-weight: 500;
+  position: relative;  /* For hover effect */
+  padding: 0.5rem 0.8rem;  /* Larger click/tap target */
+  transition: color 0.3s ease;  /* Smooth color transition */
+  letter-spacing: 0.5px;  /* Improved letter spacing */
+}
+
+.nav-links a:hover {
+  color: #ffffff;  /* Brighter white on hover */
+}
+
+/* Underline effect on hover */
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #ffffff;
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+/* Active link styling */
+.nav-links a.active {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.nav-links a.active::after {
+  width: 100%;
+  background-color: #ffffff;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
 }
 
 .logo img {
   height: 40px;
+  transition: transform 0.3s ease;  /* Logo hover effect */
+}
+
+.logo:hover img {
+  transform: scale(1.05);  /* Subtle grow effect on hover */
+}
+
+
+
+/* Responsive styles for mobile */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 1rem;
+  }
+  
+  .nav-links {
+    gap: 1rem;
+  }
+  
+  .nav-links a {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.6rem;
+  }
+  
+  .nav-links a:last-child {
+    padding: 0.5rem 1rem;
+  }
 }
 
 /* Hero Section Styles */

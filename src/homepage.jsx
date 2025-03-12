@@ -1,13 +1,11 @@
 import React from "react";
-import './index.css';
 import ContactUs from "./contactus"; // Adjust path if needed
+import './index.css';
 import TopContributions from "./topcontributions";
-
 
 const HomePage = () => {
   return (
     <div className="page-container">
-        <navbar />
         <div className="hero-section">
           <div className="hero-image-wrapper">
             <img 

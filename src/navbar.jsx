@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -8,9 +8,9 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="logo">
-        <Link to="/">
-          <img src="image1.svg" alt="Logo" />
-        </Link>
+      <Link to="/">
+      <img src={`${import.meta.env.BASE_URL}images/image1.svg`} alt="Logo" />
+      </Link>
       </div>
       
       {/* Hamburger Icon */}

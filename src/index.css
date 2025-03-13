@@ -36,19 +36,9 @@ body {
   padding: 1rem;
   padding-right: 2rem;
   background-color: #000000;
-  position: fixed;  /* Changed from relative to fixed for better UX */
-  top: 0;
-  left: 0;
-  width: 100%;
+  position: relative;
   z-index: 10;
   height: 80px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);  /* Subtle shadow for depth */
-  transition: all 0.3s ease;  /* Smooth transitions */
-}
-
-.navbar.scrolled {
-  background-color: rgba(0, 0, 0, 0.9);  /* Slightly transparent when scrolled */
-  height: 70px;  /* Slightly smaller when scrolled */
 }
 
 .nav-links {
@@ -105,34 +95,58 @@ body {
 
 .logo img {
   height: 40px;
-  transition: transform 0.3s ease;  /* Logo hover effect */
 }
 
-.logo:hover img {
-  transform: scale(1.05);  /* Subtle grow effect on hover */
+.hamburger {
+  display: none;
+  font-size: 24px;
+  color: #fff;
+  cursor: pointer;
 }
 
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 250px;
+  height: 100vh;
+  background: #111;
+  display: flex;
+  flex-direction: column;
+  padding-top: 60px;
+  transition: right 0.3s ease-in-out;
+}
 
+.mobile-menu.open {
+  right: 0;
+}
 
-/* Responsive styles for mobile */
+.mobile-menu a {
+  color: white;
+  padding: 15px;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+}
+
+.close-icon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+}
+
 @media (max-width: 768px) {
-  .navbar {
-    padding: 1rem;
-  }
-  
   .nav-links {
-    gap: 1rem;
+    display: none;
   }
-  
-  .nav-links a {
-    font-size: 0.9rem;
-    padding: 0.4rem 0.6rem;
-  }
-  
-  .nav-links a:last-child {
-    padding: 0.5rem 1rem;
+  .hamburger {
+    display: block;
   }
 }
+
 
 /* Hero Section Styles */
 .hero-section {
@@ -344,7 +358,17 @@ body {
 .otp-popup-buttons button:last-child:hover {
   background-color: #d32f2f;
 }
-
+.resend-otp-btn {
+  background-color: white;
+  padding-top: 100px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s ease-in-out;
+  font-weight: 600;
+}
 .tabs {
   display: flex;
   justify-content: center;

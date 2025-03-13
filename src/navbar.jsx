@@ -1,22 +1,9 @@
-import React, { useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { FaBars, FaTimes } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
-  const location = useLocation();
-  
-  // Add the scroll effect functionality
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        document.querySelector('.navbar').classList.add('scrolled');
-      } else {
-        document.querySelector('.navbar').classList.remove('scrolled');
-      }
-    };
-    
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <nav className="navbar">
@@ -25,10 +12,29 @@ const Navbar = () => {
           <img src={`${import.meta.env.BASE_URL}images/image1.svg`} alt="Logo" />
         </Link>
       </div>
+      
+      {/* Hamburger Icon */}
+      <div className="hamburger" onClick={() => setMenuOpen(true)}>
+        <FaBars />
+      </div>
+
+      {/* Mobile Menu */}
+      <div className={`mobile-menu ${menuOpen ? "open" : ""}`}>
+        <div className="close-icon" onClick={() => setMenuOpen(false)}>
+          <FaTimes />
+        </div>
+        <Link to="/" onClick={() => setMenuOpen(false)}>Home</Link>
+        <Link to="/signup" onClick={() => setMenuOpen(false)}>Register/Login</Link>
+        <Link to="/forms" onClick={() => setMenuOpen(false)}>Forms</Link>
+        <Link to="/placements" onClick={() => setMenuOpen(false)}>Placements</Link> {/* Added Link */}
+      </div>
+
+      {/* Desktop Menu */}
       <div className="nav-links">
-        <Link to="/" className={location.pathname === "/" ? "active" : ""}>Home</Link>
-        <Link to="/signup" className={location.pathname === "/signup" ? "active" : ""}>Register/Login</Link>
-        <Link to="/forms" className={location.pathname === "/forms" ? "active" : ""}>Forms</Link>
+        <Link to="/">Home</Link>
+        <Link to="/signup">Register/Login</Link>
+        <Link to="/forms">Forms</Link>
+        <Link to="/placements">Placements</Link> {/* Added Link */}
       </div>
     </nav>
   );

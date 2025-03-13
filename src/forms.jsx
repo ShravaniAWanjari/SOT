@@ -1,20 +1,80 @@
-import React, { useState } from "react"; 
-import "./index.css"; // Import the CSS file
+import React, { useState, useEffect } from "react";
+import "./index.css";
+import apiConfig from "./config/apiconfig";
 
 const Forms = () => {
-  const [userType, setUserType] = useState(""); // Faculty or Student
-  const [entryType, setEntryType] = useState(""); // Research, Project, Achievement
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [forms, setForms] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+
+  // Form data state matching Django model fields
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    idNumber: "",
-    entryName: "",
-    entryDescription: "",
-    researchPaperLink: "", // This will be removed
-    projectTechStack: "",
-    achievementDate: "",
-    file: null,
+    title: "",
+    description: "",
+    team_members: "",
+    tech_stack: "",
+    projecturl: "",
+    achivements: "",
+    from_date: "",
+    to_date: "",
+    category: ""
   });
+
+  // Get user data from localStorage
+  const getUserFromLocalStorage = () => {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        return JSON.parse(userStr);
+      } catch (e) {
+        console.error('Failed to parse user data:', e);
+      }
+    }
+    return null;
+  };
+
+  const user = getUserFromLocalStorage();
+
+  // Fetch user's forms on component mount
+  useEffect(() => {
+    fetchForms();
+  }, []);
+
+  // Fetch all forms belonging to the user
+  const fetchForms = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const token = localStorage.getItem('access_token') || localStorage.getItem('token');
+      
+      if (!token) {
+        throw new Error('No authentication token found. Please log in again.');
+      }
+
+      const response = await fetch(apiConfig.getUrl('api/forms/'), {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch your forms. Please try again.');
+      }
+
+      const data = await response.json();
+      setForms(data);
+    } catch (err) {
+      console.error('Error fetching forms:', err);
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Handle input change
   const handleChange = (e) => {
@@ -22,89 +82,229 @@ const Forms = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  // Handle file upload with size validation
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file && file.size > 5 * 1024 * 1024) {
-      alert("File max size: 5MB");
-      e.target.value = ""; // Reset file input
-    } else {
-      setFormData({ ...formData, file });
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const token = localStorage.getItem('access_token') || localStorage.getItem('token');
+      
+      if (!token) {
+        throw new Error('No authentication token found. Please log in again.');
+      }
+
+      const response = await fetch(apiConfig.getUrl('api/forms/'), {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to submit form. Please try again.');
+      }
+
+      const data = await response.json();
+      setSuccess('Form submitted successfully!');
+      setFormData({
+        title: "",
+        description: "",
+        team_members: "",
+        tech_stack: "",
+        projecturl: "",
+        achivements: "",
+        from_date: "",
+        to_date: "",
+        category: ""
+      });
+      setShowForm(false);
+      fetchForms(); // Refresh the forms list
+    } catch (err) {
+      console.error('Error submitting form:', err);
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form Data Submitted:", formData);
-    alert("Form submitted successfully!");
+  // Format date for display
+  const formatDate = (dateString) => {
+    if (!dateString) return 'Present';
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
   };
+
+  if (!user) {
+    return (
+      <div className="forms-container">
+        <h2>Authentication Required</h2>
+        <p>Please log in to access this page.</p>
+        <button onClick={() => window.location.href = '/login'}>Go to Login</button>
+      </div>
+    );
+  }
 
   return (
     <div className="forms-container">
-      <h2>Submit Your Work</h2>
       <h2>Research | Projects | Achievements</h2>
-      <form onSubmit={handleSubmit}>
-        <label>Name:</label>
-        <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+      
+      {error && <div className="error-message">{error}</div>}
+      {success && <div className="success-message">{success}</div>}
+      
+      {!showForm ? (
+        <div className="forms-list-container">
+          <button className="add-form-btn" onClick={() => setShowForm(true)}>
+            + Add New Entry
+          </button>
+          
+          {isLoading ? (
+            <p>Loading your entries...</p>
+          ) : forms.length > 0 ? (
+            <div className="forms-grid">
+              {forms.map(form => (
+                <div className="form-card" key={form.id}>
+                  <h3>{form.title}</h3>
+                  <span className="category-badge">{form.category}</span>
+                  <p>{form.description.substring(0, 100)}...</p>
+                  <div className="form-dates">
+                    {formatDate(form.from_date)} - {formatDate(form.to_date)}
+                  </div>
+                  <div className="tech-stack">
+                    {form.tech_stack.split(',').map((tech, index) => (
+                      <span key={index} className="tech-badge">{tech.trim()}</span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p>You haven't added any entries yet. Click the button above to get started!</p>
+          )}
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="entry-form">
+          <h3>Add New Entry</h3>
+          
+          <div className="form-group">
+            <label>Category:</label>
+            <select 
+              name="category" 
+              value={formData.category} 
+              onChange={handleChange} 
+              required
+            >
+              <option value="">Select a Category</option>
+              <option value="achievement">Achievement</option>
+              <option value="research">Research</option>
+              <option value="project">Project</option>
+            </select>
+          </div>
 
-        <label>Email:</label>
-        <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+          <div className="form-group">
+            <label>Title:</label>
+            <input 
+              type="text" 
+              name="title" 
+              value={formData.title} 
+              onChange={handleChange} 
+              required 
+            />
+          </div>
 
-        <label>Are you submitting as a Student or Faculty?</label>
-        <select onChange={(e) => setUserType(e.target.value)} required>
-          <option value="">Select</option>
-          <option value="student">Student</option>
-          <option value="faculty">Faculty</option>
-        </select>
+          <div className="form-group">
+            <label>Description:</label>
+            <textarea 
+              name="description" 
+              value={formData.description} 
+              onChange={handleChange} 
+              required 
+            />
+          </div>
 
-        {userType && (
-          <>
-            <label>{userType === "student" ? "Student ID:" : "Faculty Number:"}</label>
-            <input type="text" name="idNumber" value={formData.idNumber} onChange={handleChange} required />
-          </>
-        )}
+          <div className="form-group">
+            <label>Team Members (comma separated):</label>
+            <input 
+              type="text" 
+              name="team_members" 
+              value={formData.team_members} 
+              onChange={handleChange} 
+              required 
+            />
+          </div>
 
-        <label>Entry Type:</label>
-        <select name="entryType" value={entryType} onChange={(e) => setEntryType(e.target.value)} required>
-          <option value="">Select</option>
-          <option value="research">Research</option>
-          <option value="project">Project</option>
-          <option value="achievement">Achievement</option>
-        </select>
+          <div className="form-group">
+            <label>Technology Stack (comma separated):</label>
+            <input 
+              type="text" 
+              name="tech_stack" 
+              value={formData.tech_stack} 
+              onChange={handleChange} 
+              required 
+            />
+          </div>
 
-        {entryType && (
-          <>
-            <label>Title of your Research/Project/Achievement:</label>
-            <input type="text" name="entryName" value={formData.entryName} onChange={handleChange} required />
+          <div className="form-group">
+            <label>Project URL:</label>
+            <input 
+              type="text" 
+              name="projecturl" 
+              value={formData.projecturl} 
+              onChange={handleChange} 
+              required 
+            />
+          </div>
 
-            <label>Brief Description:</label>
-            <textarea name="entryDescription" value={formData.entryDescription} onChange={handleChange} required />
-          </>
-        )}
+          <div className="form-group">
+            <label>Achievements (comma separated):</label>
+            <textarea 
+              name="achivements" 
+              value={formData.achivements} 
+              onChange={handleChange} 
+              required 
+            />
+          </div>
 
-        {/* Conditionally render extra fields based on entry type */}
-        {entryType === "project" && (
-          <>
-            <label>GitHub Repository Link:</label>
-            <input type="url" name="projectRepoLink" value={formData.projectRepoLink} onChange={handleChange} required />
-            <label>Technology Stack Used:</label>
-            <input type="text" name="projectTechStack" value={formData.projectTechStack} onChange={handleChange} required />
-          </>
-        )}
+          <div className="form-group">
+            <label>From Date:</label>
+            <input 
+              type="date" 
+              name="from_date" 
+              value={formData.from_date} 
+              onChange={handleChange} 
+              required 
+            />
+          </div>
 
-        {entryType === "achievement" && (
-          <>
-            <label>Date of Achievement:</label>
-            <input type="date" name="achievementDate" value={formData.achievementDate} onChange={handleChange} required />
-          </>
-        )}
+          <div className="form-group">
+            <label>To Date (leave empty if ongoing):</label>
+            <input 
+              type="date" 
+              name="to_date" 
+              value={formData.to_date} 
+              onChange={handleChange} 
+            />
+          </div>
 
-        <label>Upload Proof (Max: 5MB)</label>
-        <input type="file" onChange={handleFileChange} accept=".pdf,.doc,.docx,.png,.jpg,.jpeg" required />
-
-        <button type="submit">Submit</button>
-      </form>
+          <div className="form-buttons">
+            <button type="submit" disabled={isLoading}>
+              {isLoading ? 'Submitting...' : 'Submit Entry'}
+            </button>
+            <button 
+              type="button" 
+              onClick={() => setShowForm(false)} 
+              className="cancel-btn"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      )}
     </div>
   );
 };

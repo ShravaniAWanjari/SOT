@@ -1068,8 +1068,8 @@ body {
 
 .slider-arrow {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%) !important; /* Force this transform */
+  top: calc(50% - 35px) !important; /* Move up by 5px from previous position */
+  transform: none !important;
   width: 30px;
   height: 60px;
   border-radius: 4px;
@@ -1081,13 +1081,22 @@ body {
   cursor: pointer;
   border: 1px solid rgba(255, 255, 255, 0.5);
   z-index: 10;
-  transition: background-color 0.3s ease, border-color 0.3s ease !important; /* Force transition properties */
+  transition: background-color 0.3s ease, border-color 0.3s ease !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .slider-arrow:hover {
   background-color: rgba(0, 0, 0, 0.9);
   border-color: white;
-  transform: translateY(-50%) !important; /* Force no movement on hover */
+  transform: none !important; /* Don't use transform for positioning on hover either */
+}
+
+/* Remove conflicting top property from these selectors */
+.prev-arrow, .next-arrow {
+  margin-top: 0 !important;
+  height: 60px !important;
+  line-height: 60px !important;
 }
 
 .prev-arrow {
@@ -1098,18 +1107,13 @@ body {
   right: 0 !important; /* Force right position */
 }
 
-/* Remove redundant overrides since we've added more specific fixes above */
-/* .prev-arrow, .next-arrow {
-  transform: translateY(-50%);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-.prev-arrow:hover, .next-arrow:hover {
-  transform: translateY(-50%);
-} */
-
 .slider-arrow svg {
   font-size: 1.5rem;
+  display: block; /* Ensure consistent display */
+  margin: 0 auto; /* Center horizontally */
+  line-height: 1; /* Reset line height for the icon */
+  position: relative; /* Enable positioning */
+  top: 0; /* Ensure no top offset */
 }
 
 /* Adjust card styling for slider */
@@ -1130,6 +1134,7 @@ body {
   .slider-arrow {
     width: 25px;
     height: 50px;
+    top: calc(50% - 30px) !important; /* Adjusted for tablet screens */
   }
   
   .slider-arrow svg {
@@ -1145,6 +1150,7 @@ body {
   .slider-arrow {
     width: 20px;
     height: 40px;
+    top: calc(50% - 25px) !important; /* Adjusted for mobile screens */
   }
   
   .slider-arrow svg {

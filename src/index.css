@@ -1165,10 +1165,12 @@ body {
   justify-content: space-between;
   align-items: center;
   background-color: #f64758;
-  padding: 6rem 8rem;
+  padding: 4rem 8rem; /* Standardized padding */
   color: white;
   flex-wrap: wrap;
   gap: 3rem;
+  min-height: 350px; /* Set minimum height for consistency */
+  height: auto; /* Allow height to adapt to content within min-height constraints */
 }
 
 .placement-hero-content {
@@ -1203,7 +1205,10 @@ body {
   text-align: center;
   width: 160px;
   transition: transform 0.3s ease;
-  height: 22vh;
+  height: 180px; /* Fixed height instead of viewport-relative for consistency */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .stat-item:hover {
@@ -1227,6 +1232,7 @@ body {
     align-items: center;
     text-align: center;
     padding: 4rem 3rem;
+    min-height: 300px; /* Adjusted for smaller screens */
   }
 
   .placement-hero-content {
@@ -1242,6 +1248,7 @@ body {
 @media (max-width: 768px) {
   .placement-hero {
     padding: 3rem 2rem;
+    min-height: 250px; /* Adjusted for tablet screens */
   }
 
   .hero-title {
@@ -1254,11 +1261,16 @@ body {
 
   .stat-item {
     width: 140px;
-    height: auto;
+    height: 160px; /* Consistent height for tablets */
+    padding: 1.5rem;
   }
 }
 
 @media (max-width: 480px) {
+  .placement-hero {
+    min-height: 200px; /* Adjusted for mobile screens */
+  }
+
   .hero-title {
     font-size: 2.2rem;
   }
@@ -1269,6 +1281,7 @@ body {
 
   .stat-item {
     width: 120px;
+    height: 140px; /* Consistent height for mobile */
     padding: 1.5rem;
   }
 }

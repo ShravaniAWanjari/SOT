@@ -100,7 +100,7 @@ const ProjectsPage = () => {
           </div>
           <div className="placement-stats">
             <div className="stat-item">
-              <h2>{allProjects.length}+</h2>
+              <h2>{allProjects.length}</h2>
               <p>Active Projects</p>
             </div>
             <div className="stat-item">

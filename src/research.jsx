@@ -100,7 +100,7 @@ const ResearchPage = () => {
           </div>
           <div className="placement-stats">
             <div className="stat-item">
-              <h2>{allProjects.length}+</h2>
+              <h2>{allProjects.length}</h2>
               <p>Active Research Projects</p>
             </div>
             <div className="stat-item">
@@ -114,10 +114,6 @@ const ResearchPage = () => {
             <div className="stat-item">
               <h2>30+</h2>
               <p>Research Partners</p>
-            </div>
-            <div className="stat-item">
-              <h2>6</h2>
-              <p>Patents Filed</p>
             </div>
           </div>
         </section>

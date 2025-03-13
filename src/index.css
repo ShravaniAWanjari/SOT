@@ -823,3 +823,131 @@ body {
         font-size: 0.85rem; /* Adjust description size for mobile */
     }
 }
+
+/* Table Styles */
+.research-table-container,
+.projects-table-container {
+  width: 100%;
+  margin: 1.5rem 0 3rem; /* Adjusted margin to better space from text above and below */
+  overflow-x: auto;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 2rem;
+}
+
+.research-table,
+.projects-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  background-color: #1a1a1a;
+  color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  border: 1px solid #333;
+}
+
+.research-table th,
+.projects-table th {
+  background-color: #2c2c2c;
+  padding: 15px 20px;
+  text-align: left;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
+  border-bottom: 2px solid #444;
+  color: #f64758; /* Match the red heading color to maintain design consistency */
+}
+
+.research-table td,
+.projects-table td {
+  padding: 15px 20px;
+  border-bottom: 1px solid #333;
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.research-table tr:nth-child(odd),
+.projects-table tr:nth-child(odd) {
+  background-color: rgba(0, 0, 0, 0.2); /* Subtle zebra striping for better readability */
+}
+
+.research-table tr:last-child td,
+.projects-table tr:last-child td {
+  border-bottom: none;
+}
+
+.research-table tr:hover,
+.projects-table tr:hover {
+  background-color: #222222;
+}
+
+/* Make the Project Name column slightly narrower */
+.research-table th:first-child,
+.projects-table th:first-child,
+.research-table td:first-child,
+.projects-table td:first-child {
+  width: 22%;
+}
+
+/* Make the Authors/Developers column slightly wider */
+.research-table th:nth-child(2),
+.projects-table th:nth-child(2),
+.research-table td:nth-child(2),
+.projects-table td:nth-child(2) {
+  width: 28%;
+}
+
+/* Make the Description column the widest */
+.research-table th:last-child,
+.projects-table th:last-child,
+.research-table td:last-child,
+.projects-table td:last-child {
+  width: 50%;
+}
+
+/* Responsive table styles */
+@media (max-width: 768px) {
+  .research-table,
+  .projects-table {
+    font-size: 0.9rem;
+  }
+  
+  .research-table th,
+  .projects-table th,
+  .research-table td,
+  .projects-table td {
+    padding: 12px 15px;
+  }
+  
+  /* Stack the table on mobile for better readability */
+  .research-table th:first-child,
+  .projects-table th:first-child,
+  .research-table td:first-child,
+  .projects-table td:first-child,
+  .research-table th:nth-child(2),
+  .projects-table th:nth-child(2),
+  .research-table td:nth-child(2),
+  .projects-table td:nth-child(2),
+  .research-table th:last-child,
+  .projects-table th:last-child,
+  .research-table td:last-child,
+  .projects-table td:last-child {
+    width: auto;
+  }
+}
+
+/* For very small screens, make tables scrollable horizontally */
+@media (max-width: 480px) {
+  .research-table-container,
+  .projects-table-container {
+    overflow-x: auto;
+  }
+}
+
+.contributions-section .research-content {
+  margin-bottom: 1rem; /* Add space between the introduction text and the table */
+}

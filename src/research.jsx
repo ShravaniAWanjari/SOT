@@ -1,8 +1,91 @@
-import React from "react";
+import React, { useState } from "react";
 import './index.css';
 import ContactUs from "./contactus";
 
 const ResearchPage = () => {
+  // Sample research projects data - this will be replaced with dynamic data later
+  const allProjects = [
+    {
+      name: "AI-Driven Weather Prediction",
+      authors: "Dr. Sarah Chen, James Wilson, Priya Sharma",
+      description: "Utilizing deep learning models to improve accuracy of short-term and long-term weather forecasting with a focus on extreme weather events."
+    },
+    {
+      name: "Blockchain for Healthcare Data",
+      authors: "Dr. Michael Rodriguez, Emma Johnson",
+      description: "Developing secure blockchain protocols for managing and sharing sensitive healthcare data while maintaining patient privacy."
+    },
+    {
+      name: "Sustainable IoT Networks",
+      authors: "Prof. Robert Kim, David Chen, Lina Ahmed",
+      description: "Designing energy-efficient IoT networks utilizing renewable energy sources for long-term environmental monitoring applications."
+    },
+    {
+      name: "Quantum Computing Algorithms",
+      authors: "Dr. Alan Zhao, Sophia Martinez",
+      description: "Researching novel quantum algorithms for optimization problems that outperform classical computing approaches."
+    },
+    {
+      name: "Cybersecurity Risk Assessment Framework",
+      authors: "Prof. Diana Lee, Mark Thompson, Alex Rivera",
+      description: "Creating a comprehensive framework for organizations to assess and mitigate cybersecurity risks in real-time."
+    },
+    {
+      name: "Neural Interfaces for Accessibility",
+      authors: "Dr. Maria Garcia, Kevin Lee, Sanjay Patel",
+      description: "Developing brain-computer interfaces to assist individuals with mobility impairments in operating computers and smart devices."
+    },
+    {
+      name: "Autonomous Vehicle Safety Systems",
+      authors: "Prof. James Baker, Lisa Chen, Omar Hassan",
+      description: "Researching advanced perception and decision-making algorithms to improve safety in autonomous vehicles under adverse conditions."
+    },
+    {
+      name: "Natural Language Processing for Regional Dialects",
+      authors: "Dr. Sofia Williams, Ahmed Khan",
+      description: "Enhancing NLP models to better understand and process regional dialects and colloquialisms in multiple languages."
+    },
+    {
+      name: "Sustainable Cloud Computing",
+      authors: "Prof. Eric Johnson, Tara Singh, Miguel Rodriguez",
+      description: "Investigating methods to optimize energy consumption in cloud data centers through efficient resource allocation and cooling systems."
+    },
+    {
+      name: "Wearable Health Monitoring",
+      authors: "Dr. Jessica Wu, Daniel Brown, Maya Patel",
+      description: "Creating advanced wearable devices for continuous health monitoring with real-time analytics and early warning systems for medical conditions."
+    },
+    {
+      name: "AR for Engineering Education",
+      authors: "Prof. Thomas Wilson, Andrea Lopez, Wei Chen",
+      description: "Developing augmented reality applications to enhance engineering education by visualizing complex concepts and providing interactive learning experiences."
+    },
+    {
+      name: "Adaptive Learning Systems",
+      authors: "Dr. Rachel Kim, Jason Patel, Carlos Mendez",
+      description: "Creating intelligent tutoring systems that adapt to individual learning styles and pace to optimize educational outcomes."
+    }
+  ];
+  
+  // Configuration for pagination
+  const projectsPerPage = 5;
+  const [currentPage, setCurrentPage] = useState(1);
+  
+  // Calculate pagination details
+  const totalPages = Math.ceil(allProjects.length / projectsPerPage);
+  const indexOfLastProject = currentPage * projectsPerPage;
+  const indexOfFirstProject = indexOfLastProject - projectsPerPage;
+  const currentProjects = allProjects.slice(indexOfFirstProject, indexOfLastProject);
+  
+  // Function to change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  
+  // Generate page numbers
+  const pageNumbers = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
+  
   return (
     <div className="page-container">
         <div className="hero-section">
@@ -38,33 +121,32 @@ const ResearchPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>AI-Driven Weather Prediction</td>
-                    <td>Dr. Sarah Chen, James Wilson, Priya Sharma</td>
-                    <td>Utilizing deep learning models to improve accuracy of short-term and long-term weather forecasting with a focus on extreme weather events.</td>
-                  </tr>
-                  <tr>
-                    <td>Blockchain for Healthcare Data</td>
-                    <td>Dr. Michael Rodriguez, Emma Johnson</td>
-                    <td>Developing secure blockchain protocols for managing and sharing sensitive healthcare data while maintaining patient privacy.</td>
-                  </tr>
-                  <tr>
-                    <td>Sustainable IoT Networks</td>
-                    <td>Prof. Robert Kim, David Chen, Lina Ahmed</td>
-                    <td>Designing energy-efficient IoT networks utilizing renewable energy sources for long-term environmental monitoring applications.</td>
-                  </tr>
-                  <tr>
-                    <td>Quantum Computing Algorithms</td>
-                    <td>Dr. Alan Zhao, Sophia Martinez</td>
-                    <td>Researching novel quantum algorithms for optimization problems that outperform classical computing approaches.</td>
-                  </tr>
-                  <tr>
-                    <td>Cybersecurity Risk Assessment Framework</td>
-                    <td>Prof. Diana Lee, Mark Thompson, Alex Rivera</td>
-                    <td>Creating a comprehensive framework for organizations to assess and mitigate cybersecurity risks in real-time.</td>
-                  </tr>
+                  {currentProjects.map((project, index) => (
+                    <tr key={index}>
+                      <td>{project.name}</td>
+                      <td>{project.authors}</td>
+                      <td>{project.description}</td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
+              
+              {/* Pagination Controls */}
+              {totalPages > 1 && (
+                <div className="pagination-container">
+                  <div className="pagination">
+                    {pageNumbers.map(number => (
+                      <button
+                        key={number}
+                        onClick={() => paginate(number)}
+                        className={`page-btn ${currentPage === number ? 'active' : ''}`}
+                      >
+                        {number}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
           <ContactUs />

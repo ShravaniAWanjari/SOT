@@ -951,3 +951,76 @@ body {
 .contributions-section .research-content {
   margin-bottom: 1rem; /* Add space between the introduction text and the table */
 }
+
+/* Pagination Styles */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.pagination {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.page-btn {
+  min-width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  border: 1px solid #333;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.page-btn:hover {
+  background-color: #2a2a2a;
+  border-color: #444;
+}
+
+.page-btn.active {
+  background-color: #f64758;
+  color: #fff;
+  border-color: #f64758;
+  font-weight: 600;
+}
+
+.page-btn.active:hover {
+  background-color: #e03747;
+}
+
+/* Responsive pagination */
+@media (max-width: 768px) {
+  .pagination {
+    gap: 0.3rem;
+  }
+  
+  .page-btn {
+    min-width: 2.2rem;
+    height: 2.2rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* For very small screens */
+@media (max-width: 480px) {
+  .pagination {
+    gap: 0.2rem;
+  }
+  
+  .page-btn {
+    min-width: 2rem;
+    height: 2rem;
+    font-size: 0.75rem;
+  }
+}

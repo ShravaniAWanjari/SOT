@@ -47,6 +47,14 @@ const TopContributions = () => {
         fullDescription: "An innovative approach to healthcare delivery using digital technologies. The project addresses critical gaps in current systems and offers scalable solutions for better patient care.",
         technologies: ["Health Informatics", "Mobile App Development", "Cloud Infrastructure"],
         achievements: ["Presented at Health Tech Symposium", "Pilot implementation in local clinic"]
+      },
+      {
+        title: "Project Name 6",
+        author: "Student Name 6 - Year 4",
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        fullDescription: "An innovative project exploring the intersection of artificial intelligence and sustainable development. This work demonstrates novel approaches to environmental monitoring and resource optimization.",
+        technologies: ["AI", "IoT", "Environmental Science"],
+        achievements: ["Environmental Innovation Award", "Featured in Sustainability Journal"]
       }
     ],
     faculty: [
@@ -89,6 +97,14 @@ const TopContributions = () => {
         fullDescription: "This research focuses on advanced materials and their applications in various industries. The innovative approaches have resulted in patent applications and industry partnerships.",
         technologies: ["Materials Science", "Industrial Applications", "Testing Methodologies"],
         achievements: ["Two patents filed", "Industry partnership established"]
+      },
+      {
+        title: "Project Name 6",
+        author: "Faculty Name 6 - Professor",
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        fullDescription: "A pioneering research program in quantum computing and its applications in cryptography and data security. This work has established new paradigms in the field and attracted international attention.",
+        technologies: ["Quantum Computing", "Cryptography", "Advanced Mathematics"],
+        achievements: ["International Research Excellence Award", "Multi-million dollar research grant"]
       }
     ]
   };
@@ -146,7 +162,7 @@ const TopContributions = () => {
       <br/>
         <h3>Students</h3><br/>
         <div className="card-container">
-          {Array.from({ length: 5 }).map((_, index) => (
+          {Array.from({ length: 6 }).map((_, index) => (
             <div 
               className="card" 
               key={index} 
@@ -162,7 +178,7 @@ const TopContributions = () => {
 
         <h3>Faculty</h3><br/>
         <div className="card-container">
-          {Array.from({ length: 5 }).map((_, index) => (
+          {Array.from({ length: 6 }).map((_, index) => (
             <div 
               className="card" 
               key={index} 
@@ -181,7 +197,7 @@ const TopContributions = () => {
         <h2>Best Projects</h2><br/>
         <h3>Students</h3><br/>
         <div className="card-container">
-          {Array.from({ length: 5 }).map((_, index) => (
+          {Array.from({ length: 6 }).map((_, index) => (
             <div 
               className="card" 
               key={index} 
@@ -197,7 +213,7 @@ const TopContributions = () => {
 
         <h3>Faculty</h3><br/>
         <div className="card-container">
-          {Array.from({ length: 5 }).map((_, index) => (
+          {Array.from({ length: 6 }).map((_, index) => (
             <div 
               className="card" 
               key={index} 
@@ -213,10 +229,10 @@ const TopContributions = () => {
       </div>
 
       <div className="research-content">
-        <h2>Top 5 Ongoing Research Topics</h2><br/>
+        <h2>Top 6 Ongoing Research Topics</h2><br/>
         <h3>Students</h3><br/>
         <div className="card-container">
-          {Array.from({ length: 5 }).map((_, index) => (
+          {Array.from({ length: 6 }).map((_, index) => (
             <div 
               className="card" 
               key={index} 
@@ -232,7 +248,7 @@ const TopContributions = () => {
 
         <h3>Faculty</h3><br/>
         <div className="card-container">
-          {Array.from({ length: 5 }).map((_, index) => (
+          {Array.from({ length: 6 }).map((_, index) => (
             <div 
               className="card" 
               key={index} 

@@ -26,9 +26,10 @@ const Navbar = () => {
         <Link to="/" onClick={() => setMenuOpen(false)}>Home</Link>
         <Link to="/projects" onClick={() => setMenuOpen(false)}>Projects</Link>
         <Link to="/research" onClick={() => setMenuOpen(false)}>Research</Link>
+        <Link to="/placements" onClick={() => setMenuOpen(false)}>Placements</Link> {/* Added Link */}
         <Link to="/signup" onClick={() => setMenuOpen(false)}>Register/Login</Link>
         <Link to="/forms" onClick={() => setMenuOpen(false)}>Forms</Link>
-        <Link to="/placements" onClick={() => setMenuOpen(false)}>Placements</Link> {/* Added Link */}
+        
       </div>
 
       {/* Desktop Menu */}
@@ -36,9 +37,10 @@ const Navbar = () => {
         <Link to="/">Home</Link>
         <Link to="/projects">Projects</Link>
         <Link to="/research">Research</Link>
+        <Link to="/placements">Placements</Link> {/* Added Link */}
         <Link to="/signup">Register/Login</Link>
         <Link to="/forms">Forms</Link>
-        <Link to="/placements">Placements</Link> {/* Added Link */}
+        
       </div>
     </nav>
   );

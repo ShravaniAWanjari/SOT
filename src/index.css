@@ -1157,3 +1157,118 @@ body {
     font-size: 1rem;
   }
 }
+
+/* Add these styles for the hero banner */
+.placement-hero {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f64758;
+  padding: 6rem 8rem;
+  color: white;
+  flex-wrap: wrap;
+  gap: 3rem;
+}
+
+.placement-hero-content {
+  max-width: 50%;
+  flex: 1;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+.hero-description {
+  font-size: 1.3rem;
+  line-height: 1.8;
+}
+
+.placement-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  flex: 1;
+  max-width: 55%;
+}
+
+.stat-item {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  width: 160px;
+  transition: transform 0.3s ease;
+  height: 22vh;
+}
+
+.stat-item:hover {
+  transform: translateY(-5px);
+}
+
+.stat-item h2 {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.stat-item p {
+  font-size: 1.2rem;
+  margin-top: 0.5rem;
+}
+
+/* Media queries for responsive design */
+@media (max-width: 1200px) {
+  .placement-hero {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 4rem 3rem;
+  }
+
+  .placement-hero-content {
+    max-width: 100%;
+  }
+
+  .placement-stats {
+    max-width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .placement-hero {
+    padding: 3rem 2rem;
+  }
+
+  .hero-title {
+    font-size: 2.8rem;
+  }
+
+  .hero-description {
+    font-size: 1.1rem;
+  }
+
+  .stat-item {
+    width: 140px;
+    height: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 2.2rem;
+  }
+
+  .hero-description {
+    font-size: 1rem;
+  }
+
+  .stat-item {
+    width: 120px;
+    padding: 1.5rem;
+  }
+}

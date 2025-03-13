@@ -88,16 +88,39 @@ const ResearchPage = () => {
   
   return (
     <div className="page-container">
-        <div className="hero-section">
-          <div className="hero-image-wrapper">
-            <img 
-              src={`${import.meta.env.BASE_URL}images/image2.jpg`} 
-              alt="School of Technology Research" 
-              className="hero-image"
-              loading="eager" 
-            />
+        <section className="placement-hero">
+          <div className="placement-hero-content">
+            <h1 className="hero-title">Research at School of Technology</h1>
+            <p className="hero-description">
+              Our faculty and students engage in cutting-edge research across various domains including 
+              artificial intelligence, cybersecurity, IoT, cloud computing, and robotics. We address 
+              current technological challenges and contribute to academic knowledge through state-of-the-art 
+              laboratories and collaborations with industry partners.
+            </p>
           </div>
-        </div>
+          <div className="placement-stats">
+            <div className="stat-item">
+              <h2>{allProjects.length}+</h2>
+              <p>Active Research Projects</p>
+            </div>
+            <div className="stat-item">
+              <h2>15+</h2>
+              <p>Research Publications</p>
+            </div>
+            <div className="stat-item">
+              <h2>8</h2>
+              <p>Research Labs</p>
+            </div>
+            <div className="stat-item">
+              <h2>30+</h2>
+              <p>Research Partners</p>
+            </div>
+            <div className="stat-item">
+              <h2>6</h2>
+              <p>Patents Filed</p>
+            </div>
+          </div>
+        </section>
         <div className="content-container">
           <div className="research-section">
             <div className="research-content">

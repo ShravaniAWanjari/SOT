@@ -88,16 +88,35 @@ const ProjectsPage = () => {
   
   return (
     <div className="page-container">
-        <div className="hero-section">
-          <div className="hero-image-wrapper">
-            <img 
-              src={`${import.meta.env.BASE_URL}images/image2.jpg`} 
-              alt="School of Technology Projects" 
-              className="hero-image"
-              loading="eager" 
-            />
+        <section className="placement-hero">
+          <div className="placement-hero-content">
+            <h1 className="hero-title">Projects at School of Technology</h1>
+            <p className="hero-description">
+              Our students engage in a wide range of innovative projects spanning software development, 
+              hardware design, data analysis, and more. These projects provide practical experience 
+              and help students apply theoretical knowledge to real-world problems, often in collaboration 
+              with industry partners.
+            </p>
           </div>
-        </div>
+          <div className="placement-stats">
+            <div className="stat-item">
+              <h2>{allProjects.length}+</h2>
+              <p>Active Projects</p>
+            </div>
+            <div className="stat-item">
+              <h2>25+</h2>
+              <p>Industry Partners</p>
+            </div>
+            <div className="stat-item">
+              <h2>12</h2>
+              <p>Award-Winning Projects</p>
+            </div>
+            <div className="stat-item">
+              <h2>8</h2>
+              <p>Research Areas</p>
+            </div>
+          </div>
+        </section>
         <div className="content-container">
           <div className="research-section">
             <div className="research-content">

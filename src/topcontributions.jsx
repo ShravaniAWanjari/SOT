@@ -1,9 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "./index.css"; // If needed for extra styling
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 const TopContributions = () => {
   // State to track which project's popup is currently shown
   const [selectedProject, setSelectedProject] = useState(null);
+  
+  // Create refs for each slider to control them programmatically
+  const studentSliderRef1 = useRef(null);
+  const facultySliderRef1 = useRef(null);
+  const studentSliderRef2 = useRef(null);
+  const facultySliderRef2 = useRef(null);
+  const studentSliderRef3 = useRef(null);
+  const facultySliderRef3 = useRef(null);
 
   // Additional project details that would be shown in the popup
   const projectDetails = {
@@ -47,6 +59,14 @@ const TopContributions = () => {
         fullDescription: "An innovative approach to healthcare delivery using digital technologies. The project addresses critical gaps in current systems and offers scalable solutions for better patient care.",
         technologies: ["Health Informatics", "Mobile App Development", "Cloud Infrastructure"],
         achievements: ["Presented at Health Tech Symposium", "Pilot implementation in local clinic"]
+      },
+      {
+        title: "Project Name 6",
+        author: "Student Name 6 - Year 4",
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        fullDescription: "An innovative project exploring the intersection of artificial intelligence and sustainable development. This work demonstrates novel approaches to environmental monitoring and resource optimization.",
+        technologies: ["AI", "IoT", "Environmental Science"],
+        achievements: ["Environmental Innovation Award", "Featured in Sustainability Journal"]
       }
     ],
     faculty: [
@@ -89,6 +109,14 @@ const TopContributions = () => {
         fullDescription: "This research focuses on advanced materials and their applications in various industries. The innovative approaches have resulted in patent applications and industry partnerships.",
         technologies: ["Materials Science", "Industrial Applications", "Testing Methodologies"],
         achievements: ["Two patents filed", "Industry partnership established"]
+      },
+      {
+        title: "Project Name 6",
+        author: "Faculty Name 6 - Professor",
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        fullDescription: "A pioneering research program in quantum computing and its applications in cryptography and data security. This work has established new paradigms in the field and attracted international attention.",
+        technologies: ["Quantum Computing", "Cryptography", "Advanced Mathematics"],
+        achievements: ["International Research Excellence Award", "Multi-million dollar research grant"]
       }
     ]
   };
@@ -139,115 +167,184 @@ const TopContributions = () => {
     );
   };
 
+  // Custom arrow components for the slider
+  const SliderArrow = ({ direction, onClick, sliderRef }) => {
+    return (
+      <button
+        className={`slider-arrow ${direction}-arrow`}
+        onClick={onClick || (() => direction === 'prev' ? sliderRef.current.slickPrev() : sliderRef.current.slickNext())}
+        aria-label={direction === 'prev' ? 'Previous' : 'Next'}
+      >
+        {direction === 'prev' ? <IoIosArrowBack /> : <IoIosArrowForward />}
+      </button>
+    );
+  };
+
+  // Slider settings
+  const sliderSettings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    arrows: false, // We'll use custom arrows
+    responsive: [
+      {
+        breakpoint: 992,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+        }
+      },
+      {
+        breakpoint: 576,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        }
+      }
+    ]
+  };
+
+  // Each card section is now wrapped in a slider component with custom navigation
   return (
     <section className="contributions-section">
       <div className="research-content">
-      <h2>Recent Achievements</h2><br/>
-      <br/>
+        <h2>Recent Achievements</h2><br/>
+        <br/>
         <h3>Students</h3><br/>
-        <div className="card-container">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <div 
-              className="card" 
-              key={index} 
-              onClick={() => handleProjectClick('student', index)}
-            >
-              <h4>{projectDetails.student[index].title}</h4>
-              <p className="contributor">{projectDetails.student[index].author}</p>
-              <p>{projectDetails.student[index].description}</p>
-              <button className="view-details-btn">View Details</button>
-            </div>
-          ))}
+        <div className="carousel-container">
+          <SliderArrow direction="prev" sliderRef={studentSliderRef1} />
+          <Slider ref={studentSliderRef1} {...sliderSettings} className="card-slider">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div key={index}>
+                <div 
+                  className="card" 
+                  onClick={() => handleProjectClick('student', index)}
+                >
+                  <h4>{projectDetails.student[index].title}</h4>
+                  <p className="contributor">{projectDetails.student[index].author}</p>
+                  <p>{projectDetails.student[index].description}</p>
+                  <button className="view-details-btn">View Details</button>
+                </div>
+              </div>
+            ))}
+          </Slider>
+          <SliderArrow direction="next" sliderRef={studentSliderRef1} />
         </div><br/>
 
         <h3>Faculty</h3><br/>
-        <div className="card-container">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <div 
-              className="card" 
-              key={index} 
-              onClick={() => handleProjectClick('faculty', index)}
-            >
-              <h4>{projectDetails.faculty[index].title}</h4>
-              <p className="contributor">{projectDetails.faculty[index].author}</p>
-              <p>{projectDetails.faculty[index].description}</p>
-              <button className="view-details-btn">View Details</button>
-            </div>
-          ))}
+        <div className="carousel-container">
+          <SliderArrow direction="prev" sliderRef={facultySliderRef1} />
+          <Slider ref={facultySliderRef1} {...sliderSettings} className="card-slider">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div key={index}>
+                <div 
+                  className="card" 
+                  onClick={() => handleProjectClick('faculty', index)}
+                >
+                  <h4>{projectDetails.faculty[index].title}</h4>
+                  <p className="contributor">{projectDetails.faculty[index].author}</p>
+                  <p>{projectDetails.faculty[index].description}</p>
+                  <button className="view-details-btn">View Details</button>
+                </div>
+              </div>
+            ))}
+          </Slider>
+          <SliderArrow direction="next" sliderRef={facultySliderRef1} />
         </div>
       </div>
 
       <div className="research-content">
         <h2>Best Projects</h2><br/>
         <h3>Students</h3><br/>
-        <div className="card-container">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <div 
-              className="card" 
-              key={index} 
-              onClick={() => handleProjectClick('student', index)}
-            >
-              <h4>{projectDetails.student[index].title}</h4>
-              <p className="contributor">{projectDetails.student[index].author}</p>
-              <p>{projectDetails.student[index].description}</p>
-              <button className="view-details-btn">View Details</button>
-            </div>
-          ))}
+        <div className="carousel-container">
+          <SliderArrow direction="prev" sliderRef={studentSliderRef2} />
+          <Slider ref={studentSliderRef2} {...sliderSettings} className="card-slider">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div key={index}>
+                <div 
+                  className="card" 
+                  onClick={() => handleProjectClick('student', index)}
+                >
+                  <h4>{projectDetails.student[index].title}</h4>
+                  <p className="contributor">{projectDetails.student[index].author}</p>
+                  <p>{projectDetails.student[index].description}</p>
+                  <button className="view-details-btn">View Details</button>
+                </div>
+              </div>
+            ))}
+          </Slider>
+          <SliderArrow direction="next" sliderRef={studentSliderRef2} />
         </div><br/>
 
         <h3>Faculty</h3><br/>
-        <div className="card-container">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <div 
-              className="card" 
-              key={index} 
-              onClick={() => handleProjectClick('faculty', index)}
-            >
-              <h4>{projectDetails.faculty[index].title}</h4>
-              <p className="contributor">{projectDetails.faculty[index].author}</p>
-              <p>{projectDetails.faculty[index].description}</p>
-              <button className="view-details-btn">View Details</button>
-            </div>
-          ))}
+        <div className="carousel-container">
+          <SliderArrow direction="prev" sliderRef={facultySliderRef2} />
+          <Slider ref={facultySliderRef2} {...sliderSettings} className="card-slider">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div key={index}>
+                <div 
+                  className="card" 
+                  onClick={() => handleProjectClick('faculty', index)}
+                >
+                  <h4>{projectDetails.faculty[index].title}</h4>
+                  <p className="contributor">{projectDetails.faculty[index].author}</p>
+                  <p>{projectDetails.faculty[index].description}</p>
+                  <button className="view-details-btn">View Details</button>
+                </div>
+              </div>
+            ))}
+          </Slider>
+          <SliderArrow direction="next" sliderRef={facultySliderRef2} />
         </div>
       </div>
 
       <div className="research-content">
-        <h2>Top 5 Ongoing Research Topics</h2><br/>
+        <h2>Top 6 Ongoing Research Topics</h2><br/>
         <h3>Students</h3><br/>
-        <div className="card-container">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <div 
-              className="card" 
-              key={index} 
-              onClick={() => handleProjectClick('student', index)}
-            >
-              <h4>{projectDetails.student[index].title}</h4>
-              <p className="contributor">{projectDetails.student[index].author}</p>
-              <p>{projectDetails.student[index].description}</p>
-              <button className="view-details-btn">View Details</button>
-            </div>
-          ))}
+        <div className="carousel-container">
+          <SliderArrow direction="prev" sliderRef={studentSliderRef3} />
+          <Slider ref={studentSliderRef3} {...sliderSettings} className="card-slider">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div key={index}>
+                <div 
+                  className="card" 
+                  onClick={() => handleProjectClick('student', index)}
+                >
+                  <h4>{projectDetails.student[index].title}</h4>
+                  <p className="contributor">{projectDetails.student[index].author}</p>
+                  <p>{projectDetails.student[index].description}</p>
+                  <button className="view-details-btn">View Details</button>
+                </div>
+              </div>
+            ))}
+          </Slider>
+          <SliderArrow direction="next" sliderRef={studentSliderRef3} />
         </div><br/>
 
         <h3>Faculty</h3><br/>
-        <div className="card-container">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <div 
-              className="card" 
-              key={index} 
-              onClick={() => handleProjectClick('faculty', index)}
-            >
-              <h4>{projectDetails.faculty[index].title}</h4>
-              <p className="contributor">{projectDetails.faculty[index].author}</p>
-              <p>{projectDetails.faculty[index].description}</p>
-              <button className="view-details-btn">View Details</button>
-            </div>
-          ))}
+        <div className="carousel-container">
+          <SliderArrow direction="prev" sliderRef={facultySliderRef3} />
+          <Slider ref={facultySliderRef3} {...sliderSettings} className="card-slider">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div key={index}>
+                <div 
+                  className="card" 
+                  onClick={() => handleProjectClick('faculty', index)}
+                >
+                  <h4>{projectDetails.faculty[index].title}</h4>
+                  <p className="contributor">{projectDetails.faculty[index].author}</p>
+                  <p>{projectDetails.faculty[index].description}</p>
+                  <button className="view-details-btn">View Details</button>
+                </div>
+              </div>
+            ))}
+          </Slider>
+          <SliderArrow direction="next" sliderRef={facultySliderRef3} />
         </div>
       </div>
 
-      {/* Render the popup if a project is selected */}
       {selectedProject && (
         <ProjectPopup 
           project={projectDetails[selectedProject.type][selectedProject.index]} 

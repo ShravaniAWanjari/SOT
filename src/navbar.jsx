@@ -24,6 +24,8 @@ const Navbar = () => {
           <FaTimes />
         </div>
         <Link to="/" onClick={() => setMenuOpen(false)}>Home</Link>
+        <Link to="/projects" onClick={() => setMenuOpen(false)}>Projects</Link>
+        <Link to="/research" onClick={() => setMenuOpen(false)}>Research</Link>
         <Link to="/signup" onClick={() => setMenuOpen(false)}>Register/Login</Link>
         <Link to="/forms" onClick={() => setMenuOpen(false)}>Forms</Link>
         <Link to="/placements" onClick={() => setMenuOpen(false)}>Placements</Link> {/* Added Link */}
@@ -32,6 +34,8 @@ const Navbar = () => {
       {/* Desktop Menu */}
       <div className="nav-links">
         <Link to="/">Home</Link>
+        <Link to="/projects">Projects</Link>
+        <Link to="/research">Research</Link>
         <Link to="/signup">Register/Login</Link>
         <Link to="/forms">Forms</Link>
         <Link to="/placements">Placements</Link> {/* Added Link */}

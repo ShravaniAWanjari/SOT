@@ -2,6 +2,21 @@ import React, { useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import "./Placements.css";
 
+// Ensure consistent styling with index.css for the hero banner
+const bannerStyles = {
+  placementHero: {
+    minHeight: "350px",
+    height: "auto",
+    padding: "4rem 8rem"
+  },
+  statItem: {
+    height: "180px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center"
+  }
+};
+
 const companyLogos = [
   { name: "Google", src: "https://img.icons8.com/color/96/google-logo.png" },
   { name: "Microsoft", src: "https://img.icons8.com/fluency/96/microsoft.png" },
@@ -54,7 +69,7 @@ const Placements = () => {
   
   return (
     <div className="placements-container">
-      <section className="placement-hero">
+      <section className="placement-hero" style={bannerStyles.placementHero}>
         <div className="placement-hero-content">
           <h1 className="hero-title">B.Tech Placement Highlights</h1>
           <p className="hero-description">
@@ -69,23 +84,23 @@ const Placements = () => {
           </p>
         </div>
         <div className="placement-stats">
-          <div className="stat-item">
+          <div className="stat-item" style={bannerStyles.statItem}>
             <h2>100%</h2>
             <p>Placement Track</p>
           </div>
-          <div className="stat-item">
-            <h2>24.00 LPA</h2>
+          <div className="stat-item" style={bannerStyles.statItem}>
+            <h2>24.00</h2>
             <p>Highest CTC</p>
           </div>
-          <div className="stat-item">
-            <h2>11.5 LPA</h2>
+          <div className="stat-item" style={bannerStyles.statItem}>
+            <h2>11.5</h2>
             <p>Top 20% Avg. CTC</p>
           </div>
-          <div className="stat-item">
-            <h2>8.6 LPA</h2>
+          <div className="stat-item" style={bannerStyles.statItem}>
+            <h2>8.6</h2>
             <p>Overall Avg. CTC</p>
           </div>
-          <div className="stat-item">
+          <div className="stat-item" style={bannerStyles.statItem}>
             <h2>40+</h2>
             <p>Corporates for Internships</p>
           </div>

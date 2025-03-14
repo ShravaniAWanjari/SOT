@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
-import "./Placements.css";
+import "./Placements.css"; // Load placement.css after, so it overrides index.css
+import "./index.css"; // Load index.css first
 
 // Ensure consistent styling with index.css for the hero banner
 const bannerStyles = {
@@ -69,7 +70,7 @@ const Placements = () => {
   
   return (
     <div className="placements-container">
-      <section className="placement-hero" style={bannerStyles.placementHero}>
+      <section className="placement-hero">
         <div className="placement-hero-content">
           <h1 className="hero-title">B.Tech Placement Highlights</h1>
           <p className="hero-description">
@@ -84,7 +85,7 @@ const Placements = () => {
           </p>
         </div>
         <div className="placement-stats">
-          <div className="stat-item" style={bannerStyles.statItem}>
+          <div className="stat-item">
             <h2>100%</h2>
             <p>Placement Track</p>
           </div>

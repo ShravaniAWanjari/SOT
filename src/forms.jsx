@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import "./index.css";
+import React, { useEffect, useState } from "react";
 import apiConfig from "./config/apiconfig";
+import "./index.css";
 
 const Forms = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -151,8 +151,9 @@ const Forms = () => {
   }
 
   return (
+    <div className="forms-wrapper">
     <div className="forms-container">
-      <h2>Research | Projects | Achievements</h2>
+      <h2>Research, Projects & Achievements</h2>
       
       {error && <div className="error-message">{error}</div>}
       {success && <div className="success-message">{success}</div>}
@@ -305,6 +306,7 @@ const Forms = () => {
           </div>
         </form>
       )}
+    </div>
     </div>
   );
 };

@@ -4,9 +4,9 @@ import Placements from './Placements';
 import Forms from "./forms";
 import HomePage from "./homepage";
 import Navbar from "./navbar";
-import SignUp from "./signup";
 import ProjectsPage from "./projects";
 import ResearchPage from "./research";
+import SignUp from "./signup";
 
 
 const App = () => {

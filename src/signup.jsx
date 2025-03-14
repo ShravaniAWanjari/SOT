@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import './index.css';
-import Forms from "./forms";
 import apiConfig from "./config/apiconfig";
+import './index.css';
 
 const SignUp = () => {
     const [activeTab, setActiveTab] = useState('login');
@@ -356,6 +355,7 @@ const SignUp = () => {
     };
 
     return (
+        <div className="auth-wrapper">
         <div className="auth-container">
             <div className="tabs">
                 <button 
@@ -407,9 +407,9 @@ const SignUp = () => {
                 {isLoading ? 'Resending...' : 'Resend OTP'}
             </button>
         </div>
+        
     </div>
 )}
-
 
             {activeTab === 'login' ? (
                 <form className="form-container" onSubmit={handleLogin}>
@@ -485,6 +485,7 @@ const SignUp = () => {
                     </button>
                 </form>
             )}
+        </div>
         </div>
     );
 };

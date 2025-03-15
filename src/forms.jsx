@@ -77,10 +77,23 @@ const Forms = () => {
   };
 
   // Handle input change
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+// Handle input change with title validation
+const handleChange = (e) => {
+  const { name, value } = e.target;
+
+  if (name === "title") {
+    const wordCount = value.trim().split(/\s+/).length;
+    if (wordCount > 4) {
+      setError("Title should not exceed 4 words.");
+      return;
+    } else {
+      setError(null); // Clear the error if within limit
+    }
+  }
+
+  setFormData({ ...formData, [name]: value });
+};
+
 
   // Handle form submission
   const handleSubmit = async (e) => {

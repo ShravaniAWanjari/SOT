@@ -138,7 +138,7 @@ const TopContributions = () => {
       try {
         setLoading(true);
         // Fetch all forms from the API
-        const response = await fetch('http://127.0.0.1:8000/api/forms/');
+        const response = await fetch(apiConfig.getUrl('api/forms/'));
 
         if (!response.ok) {
           throw new Error(`API error: ${response.status}`);

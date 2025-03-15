@@ -103,6 +103,7 @@ const Navbar = () => {
         <Link to="/projects">Projects</Link>
         <Link to="/research">Research</Link>
         <Link to="/placements">Placements</Link>
+        <Link to="/forms" onClick={() => setMenuOpen(false)}>Forms</Link>
 
         {isLoggedIn ? (
           <div className="user-dropdown">

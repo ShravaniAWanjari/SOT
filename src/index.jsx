@@ -1,4 +1,4 @@
-import "mdb-react-ui-kit/dist/css/mdb.min.css"; 
+import "mdb-react-ui-kit/dist/css/mdb.min.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { HashRouter } from "react-router-dom";
@@ -9,7 +9,6 @@ import "./index.css";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <HashRouter>
-  <App />
-</HashRouter>,
-  document.getElementById('root')
+    <App />
+  </HashRouter>
 );

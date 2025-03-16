@@ -3,21 +3,116 @@ import './index.css';
 import ContactUs from "./contactus";
 import apiConfig from "./config/apiconfig";
 
+// Cache key for local storage
+const PROJECTS_CACHE_KEY = 'sot_projects_data';
+const CACHE_EXPIRY_TIME = 5 * 60 * 1000; // 5 minutes in milliseconds
+const CACHE_VERSION_KEY = 'sot_data_version'; // Version tracking for cache invalidation
+
 const ProjectsPage = () => {
   // State for API projects
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [dataVersion, setDataVersion] = useState(0);
   
   // Configuration for pagination
   const projectsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
   
-  // Fetch projects from API
+  // Function to check for data updates in the background
+  const checkForUpdates = async () => {
+    try {
+      // Add a small random delay to prevent all clients from checking at the same time
+      await new Promise(resolve => setTimeout(resolve, Math.random() * 1000));
+      
+      const response = await fetch(apiConfig.getUrl('api/forms/'), { 
+        headers: { 'X-Check-Updates-Only': 'true' },
+        cache: 'no-store'  // Bypass browser cache
+      });
+      
+      if (!response.ok) return;
+      
+      const data = await response.json();
+      const allProjects = data.filter(item => item.category === 'project');
+      
+      // Compare project count - simple heuristic for detecting changes
+      const cachedData = localStorage.getItem(PROJECTS_CACHE_KEY);
+      if (cachedData) {
+        const { data: cachedProjects } = JSON.parse(cachedData);
+        
+        // Check if count has changed or if the latest project is different
+        if (cachedProjects.length !== allProjects.length || 
+            (allProjects[0]?.id !== cachedProjects[0]?.id)) {
+          console.log('New data detected, invalidating cache');
+          
+          // Increment version to invalidate caches
+          const newVersion = (parseInt(localStorage.getItem(CACHE_VERSION_KEY) || '0')) + 1;
+          localStorage.setItem(CACHE_VERSION_KEY, newVersion.toString());
+          
+          // Update state with new data
+          setProjects(allProjects);
+          
+          // Store updated cache
+          localStorage.setItem(PROJECTS_CACHE_KEY, JSON.stringify({
+            data: allProjects,
+            timestamp: Date.now(),
+            version: newVersion
+          }));
+        }
+      }
+    } catch (error) {
+      console.error("Background update check failed:", error);
+      // Non-critical, so we don't set error state
+    }
+  };
+  
+  // Set up polling for updates (every 2 minutes)
+  useEffect(() => {
+    const pollInterval = setInterval(checkForUpdates, 2 * 60 * 1000);
+    return () => clearInterval(pollInterval);
+  }, []);
+  
+  // Effect to watch for version changes (from other tabs)
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      if (e.key === CACHE_VERSION_KEY) {
+        setDataVersion(parseInt(e.newValue || '0'));
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+  
+  // Fetch projects from API with caching
   useEffect(() => {
     const fetchProjects = async () => {
       try {
         setLoading(true);
+        
+        // Get current cache version
+        const currentVersion = parseInt(localStorage.getItem(CACHE_VERSION_KEY) || '0');
+        
+        // Check if we have cached data
+        const cachedData = localStorage.getItem(PROJECTS_CACHE_KEY);
+        
+        if (cachedData) {
+          const { data, timestamp, version } = JSON.parse(cachedData);
+          
+          // Check if cache is still valid (within expiry time and version matches)
+          if (Date.now() - timestamp < CACHE_EXPIRY_TIME && version === currentVersion) {
+            console.log('Using cached projects data');
+            setProjects(data);
+            setLoading(false);
+            
+            // Still check for updates in the background
+            setTimeout(checkForUpdates, 1000);
+            return;
+          }
+        }
+        
+        // If no valid cache, fetch from API
+        console.log('Fetching fresh projects data');
         const response = await fetch(apiConfig.getUrl('api/forms/'));
         
         if (!response.ok) {
@@ -29,7 +124,16 @@ const ProjectsPage = () => {
         // Filter for projects only
         const allProjects = data.filter(item => item.category === 'project');
         
+        // Store in state
         setProjects(allProjects);
+        
+        // Cache the data with timestamp and version
+        localStorage.setItem(PROJECTS_CACHE_KEY, JSON.stringify({
+          data: allProjects,
+          timestamp: Date.now(),
+          version: currentVersion
+        }));
+        
         setLoading(false);
       } catch (error) {
         console.error("Error fetching projects:", error);
@@ -39,7 +143,17 @@ const ProjectsPage = () => {
     };
     
     fetchProjects();
-  }, []);
+  }, [dataVersion]); // Re-fetch when dataVersion changes (cache invalidated)
+  
+  // Function to force refresh data
+  const refreshData = async () => {
+    // Increment version to invalidate caches
+    const newVersion = (parseInt(localStorage.getItem(CACHE_VERSION_KEY) || '0')) + 1;
+    localStorage.setItem(CACHE_VERSION_KEY, newVersion.toString());
+    
+    // This will trigger a re-fetch due to the dataVersion dependency
+    setDataVersion(newVersion);
+  };
   
   // Calculate pagination details
   const totalPages = Math.ceil(projects.length / projectsPerPage);
@@ -74,7 +188,7 @@ const ProjectsPage = () => {
       <div className="page-container">
         <div className="error-message">
           <p>Error loading projects: {error}</p>
-          <button onClick={() => window.location.reload()} className="retry-button">
+          <button onClick={refreshData} className="retry-button">
             Retry
           </button>
         </div>
@@ -123,7 +237,12 @@ const ProjectsPage = () => {
           </div>
           <div className="contributions-section">
             <div className="research-content">
-              <h2>All Projects</h2>
+              <div className="header-with-refresh">
+                <h2>All Projects</h2>
+                <button onClick={refreshData} className="refresh-button" title="Refresh projects">
+                  <span className="refresh-icon">↻</span>
+                </button>
+              </div>
               <p>Below are projects developed by our students and faculty. These projects showcase innovation, technical excellence, and creative problem-solving approaches.</p>
             </div>
             <div className="projects-table-container">
@@ -141,7 +260,7 @@ const ProjectsPage = () => {
                     </thead>
                     <tbody>
                       {currentProjects.map((project, index) => (
-                        <tr key={index}>
+                        <tr key={project.id || index}>
                           <td>{project.title}</td>
                           <td>
                             {project.user?.name || 
@@ -178,7 +297,7 @@ const ProjectsPage = () => {
           <ContactUs />
         </div>
         
-        {/* Add styles for loading and error states */}
+        {/* Add styles for loading, error, and refresh */}
         <style jsx>{`
           .loading-container {
             display: flex;
@@ -218,6 +337,32 @@ const ProjectsPage = () => {
             border-radius: 4px;
             margin-top: 15px;
             cursor: pointer;
+          }
+          
+          .header-with-refresh {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+          }
+          
+          .refresh-button {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #007bff;
+            transition: transform 0.3s ease;
+          }
+          
+          .refresh-button:hover {
+            transform: rotate(180deg);
+          }
+          
+          .refresh-icon {
+            font-size: 24px;
           }
         `}</style>
     </div>

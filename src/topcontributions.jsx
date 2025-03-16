@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect } from "react";
-import "./index.css"; // If needed for extra styling
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import apiConfig from "./config/apiconfig";
+import React, { useEffect, useRef, useState } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
+import apiConfig from "./config/apiconfig";
+import "./index.css"; // If needed for extra styling
 
 const TopContributions = () => {
   // State to track which project's popup is currently shown
@@ -294,164 +294,201 @@ const TopContributions = () => {
     ]
   };
 
-  // Add CSS for empty states
+  const FullscreenLoader = () => (
+    <div className="fullscreen-loader">
+      <div className="spinner"></div>
+      <p>Loading...</p>
+    </div>
+  );
+  
   const emptyStateStyles = `
-    .empty-message {
-      padding: 20px;
-      text-align: center;
-      background-color: #f8f9fa;
-      border-radius: 8px;
-      color: #6c757d;
-      font-style: italic;
-      width: 100%;
-    }
-    
-    .loading {
+    .fullscreen-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #000;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      min-height: 200px;
-      font-size: 1.2rem;
-      color: #6c757d;
+      color: #fff;
+      z-index: 9999;
     }
     
-    .error {
-      padding: 20px;
-      text-align: center;
-      background-color: #f8d7da;
-      border-radius: 8px;
-      color: #721c24;
-      margin: 20px 0;
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #e74c3c;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin0-bottom: 200px;
+    }
+  
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
   `;
-
+  
   if (loading) {
     return (
       <>
         <style>{emptyStateStyles}</style>
-        <div className="loading">Loading top projects...</div>
+        <FullscreenLoader />
       </>
     );
   }
 
-  if (error) {
-    return (
-      <>
-        <style>{emptyStateStyles}</style>
-        <div className="error">Error loading data: {error}</div>
-      </>
-    );
-  }
+
+  const ErrorMessage = ({ error, onRetry }) => (
+    <div className="error-message">
+      <p>⚠️ Something went wrong: {error}</p>
+      <button onClick={onRetry} className="retry-button">Retry</button>
+    </div>
+  );
+  
+  const errorStyles = `
+    .error-message {
+      padding: 20px;
+      text-align: center;
+      background-color: black;
+      color: #ff4c4c;
+      color: red;
+      border: 1px solid #ff4c4c;
+      border-radius: 8px;
+      margin: 20px auto;
+      max-width: 400px;
+    }
+  `;
+  
+  // if (error) {
+  //   return (
+  //     <>
+  //       <style>{errorStyles}</style>
+  //       <ErrorMessage error={error} onRetry={() => window.location.reload()} />
+  //     </>
+  //   );
+  // }
+  
+
+  // if (error) {
+  //   return (
+  //     <>
+  //       <style>{emptyStateStyles}</style>
+  //       <div className="error">Error loading data: {error}</div>
+  //     </>
+  //   );
+  // }
+
+
+
+  
 
   // Each card section is now wrapped in a slider component with custom navigation
   return (
     <section className="contributions-section">
-      <div className="research-content">
-        <h2>Recent Achievements</h2><br />
-        <br />
-        <h3>Students</h3><br />
-        <div className="carousel-container">
-          <SliderArrow direction="prev" sliderRef={studentSliderRef1} />
-          <Slider ref={studentSliderRef1} {...sliderSettings} className="card-slider">
-            {studentAchievements.length > 0 ? (
-              studentAchievements.map((achievement, index) => (
-                <div key={index}>
-                  <div className="card" onClick={() => handleAPIProjectClick(achievement)}>
-                    <h4>{achievement.title}</h4>
-                    <p className="contributor">
-                      {achievement.user && achievement.user.name ? achievement.user.name :
-                        (achievement.user_type === 'STUDENT' ? 'Student' : 'Faculty')}
-                    </p>
-                    <p>{achievement.description ? (achievement.description.length > 100 ? achievement.description.substring(0, 100) + '...' : achievement.description) : 'No description available'}</p>
-                    <button className="view-details-btn">View Details</button>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="empty-message">No top achievements available</div>
-            )}
-          </Slider>
-          <SliderArrow direction="next" sliderRef={studentSliderRef1} />
-        </div><br />
+       <div className="research-content">
+    <h2>Recent Achievements</h2>
 
-        <h3>Faculty</h3><br />
-        <div className="carousel-container">
-          <SliderArrow direction="prev" sliderRef={facultySliderRef1} />
-          <Slider ref={facultySliderRef1} {...sliderSettings} className="card-slider">
-            {facultyAchievements.length > 0 ? (
-              facultyAchievements.map((achievement, index) => (
-                <div key={index}>
-                  <div
-                    className="card"
-                    onClick={() => handleAPIProjectClick(achievement)}
-                  >
-                    <h4>{achievement.title}</h4>
-                    <p className="contributor">{achievement.user ? achievement.user.name : 'Faculty'}</p>
-                    <p>{achievement.description ? (achievement.description.length > 100 ? achievement.description.substring(0, 100) + '...' : achievement.description) : 'No description available'}</p>
-                    <button className="view-details-btn">View Details</button>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="empty-message">No top achievements available</div>
-            )}
-          </Slider>
-          <SliderArrow direction="next" sliderRef={facultySliderRef1} />
-        </div>
+    {/* Students Section */}
+    <h3>Students</h3>
+    {studentAchievements.length > 0 ? (
+      <div className="carousel-container">
+        <SliderArrow direction="prev" sliderRef={studentSliderRef1} />
+
+        <Slider ref={studentSliderRef1} {...sliderSettings}>
+          {studentAchievements.map((achievement, index) => (
+            <div key={index} className="card" onClick={() => handleAPIProjectClick(achievement)}>
+              <h4>{achievement.title}</h4>
+              <p className="contributor">{achievement.user?.name || 'Student'}</p>
+              <p>{achievement.description || 'No description available'}</p>
+              <button className="view-details-btn">View Details</button>
+            </div>
+          ))}
+        </Slider>
+
+        <SliderArrow direction="next" sliderRef={studentSliderRef1} />
       </div>
+    ) : (
+      <p className="no-data-message">No top achievements available.</p>
+    )}
 
-      <div className="research-content">
-        <h2>Best Projects</h2><br />
-        <h3>Students</h3><br />
-        <div className="carousel-container">
-          <SliderArrow direction="prev" sliderRef={studentSliderRef2} />
-          <Slider ref={studentSliderRef2} {...sliderSettings} className="card-slider">
-            {studentProjects.length > 0 ? (
-              studentProjects.map((project, index) => (
-                <div key={index}>
-                  <div
-                    className="card"
-                    onClick={() => handleAPIProjectClick(project)}
-                  >
-                    <h4>{project.title}</h4>
-                    <p className="contributor">{project.user ? project.user.name : 'Student'}</p>
-                    <p>{project.description ? (project.description.length > 100 ? project.description.substring(0, 100) + '...' : project.description) : 'No description available'}</p>
-                    <button className="view-details-btn">View Details</button>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="empty-message">No top projects available</div>
-            )}
-          </Slider>
-          <SliderArrow direction="next" sliderRef={studentSliderRef2} />
-        </div><br />
+    {/* Faculty Section */}
+    <h3>Faculty</h3>
+    {facultyAchievements.length > 0 ? (
+      <div className="carousel-container">
+        <SliderArrow direction="prev" sliderRef={facultySliderRef1} />
 
-        <h3>Faculty</h3><br />
-        <div className="carousel-container">
-          <SliderArrow direction="prev" sliderRef={facultySliderRef2} />
-          <Slider ref={facultySliderRef2} {...sliderSettings} className="card-slider">
-            {facultyProjects.length > 0 ? (
-              facultyProjects.map((project, index) => (
-                <div key={index}>
-                  <div
-                    className="card"
-                    onClick={() => handleAPIProjectClick(project)}
-                  >
-                    <h4>{project.title}</h4>
-                    <p className="contributor">{project.user ? project.user.name : 'Faculty'}</p>
-                    <p>{project.description ? (project.description.length > 100 ? project.description.substring(0, 100) + '...' : project.description) : 'No description available'}</p>
-                    <button className="view-details-btn">View Details</button>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="empty-message">No top projects available</div>
-            )}
-          </Slider>
-          <SliderArrow direction="next" sliderRef={facultySliderRef2} />
-        </div>
+        <Slider ref={facultySliderRef1} {...sliderSettings}>
+          {facultyAchievements.map((achievement, index) => (
+            <div key={index} className="card" onClick={() => handleAPIProjectClick(achievement)}>
+              <h4>{achievement.title}</h4>
+              <p className="contributor">{achievement.user?.name || 'Faculty'}</p>
+              <p>{achievement.description || 'No description available'}</p>
+              <button className="view-details-btn">View Details</button>
+            </div>
+          ))}
+        </Slider>
+
+        <SliderArrow direction="next" sliderRef={facultySliderRef1} />
       </div>
+    ) : (
+      <p className="no-data-message">No top achievements available.</p>
+    )}
+  </div>
+
+  {/* Best Projects Section */}
+  <div className="research-content">
+    <h2>Best Projects</h2>
+
+    {/* Students Section */}
+    <h3>Students</h3>
+    {studentProjects.length > 0 ? (
+      <div className="carousel-container">
+        <SliderArrow direction="prev" sliderRef={studentSliderRef2} />
+
+        <Slider ref={studentSliderRef2} {...sliderSettings}>
+          {studentProjects.map((project, index) => (
+            <div key={index} className="card" onClick={() => handleAPIProjectClick(project)}>
+              <h4>{project.title}</h4>
+              <p className="contributor">{project.user?.name || 'Student'}</p>
+              <p>{project.description || 'No description available'}</p>
+              <button className="view-details-btn">View Details</button>
+            </div>
+          ))}
+        </Slider>
+
+        <SliderArrow direction="next" sliderRef={studentSliderRef2} />
+      </div>
+    ) : (
+      <p className="no-data-message">No top projects available.</p>
+    )}
+
+    {/* Faculty Section */}
+    <h3>Faculty</h3>
+    {facultyProjects.length > 0 ? (
+      <div className="carousel-container">
+        <SliderArrow direction="prev" sliderRef={facultySliderRef2} />
+
+        <Slider ref={facultySliderRef2} {...sliderSettings}>
+          {facultyProjects.map((project, index) => (
+            <div key={index} className="card" onClick={() => handleAPIProjectClick(project)}>
+              <h4>{project.title}</h4>
+              <p className="contributor">{project.user?.name || 'Faculty'}</p>
+              <p>{project.description || 'No description available'}</p>
+              <button className="view-details-btn">View Details</button>
+            </div>
+          ))}
+        </Slider>
+
+        <SliderArrow direction="next" sliderRef={facultySliderRef2} />
+      </div>
+    ) : (
+      <p className="no-data-message">No top projects available.</p>
+    )}
+  </div>
 
       <div className="research-content">
         <h2>Top 6 Ongoing Research Topics</h2><br />

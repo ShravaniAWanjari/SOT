@@ -74,6 +74,7 @@ const Navbar = () => {
         <Link to="/projects" onClick={() => setMenuOpen(false)}>Projects</Link>
         <Link to="/research" onClick={() => setMenuOpen(false)}>Research</Link>
         <Link to="/placements" onClick={() => setMenuOpen(false)}>Placements</Link>
+        <Link to="/achivements" onClick={() => setMenuOpen(false)}>achivements</Link>
 
         {isLoggedIn ? (
           <>
@@ -103,6 +104,9 @@ const Navbar = () => {
         <Link to="/projects">Projects</Link>
         <Link to="/research">Research</Link>
         <Link to="/placements">Placements</Link>
+        <Link to="/achivements">Achivements</Link>
+        
+
         
         {isLoggedIn && <Link to="/forms">Forms</Link>}
 

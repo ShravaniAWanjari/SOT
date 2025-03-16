@@ -1,81 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import './index.css';
 import ContactUs from "./contactus";
+import apiConfig from "./config/apiconfig";
 
 const ProjectsPage = () => {
-  // Sample projects data - this will be replaced with dynamic data later
-  const allProjects = [
-    {
-      name: "Smart Campus Navigation App",
-      authors: "Emily Carter, Jason Wang, Ravi Patel",
-      description: "A mobile application that uses indoor positioning systems to help students navigate campus buildings, find classrooms, and locate resources efficiently."
-    },
-    {
-      name: "EcoTrack Waste Management",
-      authors: "Marcus Johnson, Zoe Garcia",
-      description: "An IoT-based waste management system that monitors fill levels in bins across campus and optimizes collection routes to reduce energy consumption."
-    },
-    {
-      name: "Virtual Lab Simulator",
-      authors: "Dr. Thomas Nguyen, Alicia Brown, Kevin Park",
-      description: "A VR-based laboratory simulation platform that allows students to conduct experiments in a safe, virtual environment before performing them in physical labs."
-    },
-    {
-      name: "Automated Grading System",
-      authors: "Prof. Laura Simmons, Derek Chen",
-      description: "An AI-powered system that assists instructors in grading programming assignments by analyzing code quality, correctness, and efficiency."
-    },
-    {
-      name: "Renewable Energy Dashboard",
-      authors: "Sophia Miller, Omar Hassan, Leila Wong",
-      description: "A real-time monitoring dashboard that tracks energy production from the solar panels and wind turbines installed on campus and visualizes energy consumption patterns."
-    },
-    {
-      name: "Smart Study Group Matcher",
-      authors: "Priya Sharma, Michael Johnson, David Lee",
-      description: "An application that matches students for study groups based on course schedules, learning styles, and academic strengths to promote collaborative learning."
-    },
-    {
-      name: "Campus Event Discovery Platform",
-      authors: "Alex Rivera, Emma Chen, Jason Patel",
-      description: "A mobile app that personalizes event recommendations for students based on their interests, academic program, and past attendance patterns."
-    },
-    {
-      name: "AI Research Paper Assistant",
-      authors: "Dr. Sarah Kim, Mark Thompson, Leila Ahmed",
-      description: "A tool that helps researchers analyze scientific papers, extract key information, and identify potential research gaps or opportunities."
-    },
-    {
-      name: "Peer-to-Peer Equipment Sharing",
-      authors: "Carlos Rodriguez, Tara Wilson, Wei Chen",
-      description: "A platform that enables students to share specialized equipment, tools, and resources through a secure booking and accountability system."
-    },
-    {
-      name: "Sustainable Food Delivery Network",
-      authors: "Maya Patel, Omar Hassan, Zoe Garcia",
-      description: "An eco-friendly food delivery service that uses electric vehicles and optimized routing to reduce carbon footprint while serving campus dining needs."
-    },
-    {
-      name: "AR Laboratory Guide",
-      authors: "Prof. James Wilson, Andrea Lopez, Ravi Kumar",
-      description: "An augmented reality application that overlays information and instructions on laboratory equipment to guide students through complex experiments."
-    },
-    {
-      name: "Student Mental Health Companion",
-      authors: "Dr. Jessica Wu, Daniel Brown, Sophia Martinez",
-      description: "A mobile application providing resources, mood tracking, meditation guides, and anonymous peer support for student mental wellbeing."
-    }
-  ];
+  // State for API projects
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
   // Configuration for pagination
   const projectsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
   
+  // Fetch projects from API
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(apiConfig.getUrl('api/forms/'));
+        
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // Filter for projects only
+        const allProjects = data.filter(item => item.category === 'project');
+        
+        setProjects(allProjects);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+        setError(error.message);
+        setLoading(false);
+      }
+    };
+    
+    fetchProjects();
+  }, []);
+  
   // Calculate pagination details
-  const totalPages = Math.ceil(allProjects.length / projectsPerPage);
+  const totalPages = Math.ceil(projects.length / projectsPerPage);
   const indexOfLastProject = currentPage * projectsPerPage;
   const indexOfFirstProject = indexOfLastProject - projectsPerPage;
-  const currentProjects = allProjects.slice(indexOfFirstProject, indexOfLastProject);
+  const currentProjects = projects.slice(indexOfFirstProject, indexOfLastProject);
   
   // Function to change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -84,6 +54,32 @@ const ProjectsPage = () => {
   const pageNumbers = [];
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
+  }
+  
+  // Loading state
+  if (loading) {
+    return (
+      <div className="page-container">
+        <div className="loading-container">
+          <div className="spinner"></div>
+          <p>Loading projects...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  // Error state
+  if (error) {
+    return (
+      <div className="page-container">
+        <div className="error-message">
+          <p>Error loading projects: {error}</p>
+          <button onClick={() => window.location.reload()} className="retry-button">
+            Retry
+          </button>
+        </div>
+      </div>
+    );
   }
   
   return (
@@ -100,7 +96,7 @@ const ProjectsPage = () => {
           </div>
           <div className="placement-stats">
             <div className="stat-item">
-              <h2>{allProjects.length}</h2>
+              <h2>{projects.length}</h2>
               <p>Active Projects</p>
             </div>
             <div className="stat-item">
@@ -127,51 +123,105 @@ const ProjectsPage = () => {
           </div>
           <div className="contributions-section">
             <div className="research-content">
-              <h2>Featured Projects</h2>
-              <p>Below are some of the outstanding projects developed by our students and faculty. These projects showcase innovation, technical excellence, and creative problem-solving approaches.</p>
+              <h2>All Projects</h2>
+              <p>Below are projects developed by our students and faculty. These projects showcase innovation, technical excellence, and creative problem-solving approaches.</p>
             </div>
             <div className="projects-table-container">
-              <table className="projects-table">
-                <thead>
-                  <tr>
-                    <th>Project Name</th>
-                    <th>Authors/Developers</th>
-                    <th>Description</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentProjects.map((project, index) => (
-                    <tr key={index}>
-                      <td>{project.name}</td>
-                      <td>{project.authors}</td>
-                      <td>{project.description}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              
-              {/* Pagination Controls */}
-              {totalPages > 1 && (
-                <div className="pagination-container">
-                  <div className="pagination">
-                    {pageNumbers.map(number => (
-                      <button
-                        key={number}
-                        onClick={() => paginate(number)}
-                        className={`page-btn ${currentPage === number ? 'active' : ''}`}
-                      >
-                        {number}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+              {projects.length === 0 ? (
+                <p>No projects available at this time.</p>
+              ) : (
+                <>
+                  <table className="projects-table">
+                    <thead>
+                      <tr>
+                        <th>Project Name</th>
+                        <th>Authors/Developers</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {currentProjects.map((project, index) => (
+                        <tr key={index}>
+                          <td>{project.title}</td>
+                          <td>
+                            {project.user?.name || 
+                              (project.user_type === 'STUDENT' ? 'Student' : 
+                               project.user_type === 'FACULTY' ? 'Faculty' : 'Admin')}
+                            {project.team_members && `, ${project.team_members}`}
+                          </td>
+                          <td>{project.description}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  
+                  {/* Pagination Controls */}
+                  {totalPages > 1 && (
+                    <div className="pagination-container">
+                      <div className="pagination">
+                        {pageNumbers.map(number => (
+                          <button
+                            key={number}
+                            onClick={() => paginate(number)}
+                            className={`page-btn ${currentPage === number ? 'active' : ''}`}
+                          >
+                            {number}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
           <ContactUs />
         </div>
+        
+        {/* Add styles for loading and error states */}
+        <style jsx>{`
+          .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+          }
+          
+          .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top-color: #007bff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 20px;
+          }
+          
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+          
+          .error-message {
+            text-align: center;
+            padding: 30px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            color: #dc3545;
+          }
+          
+          .retry-button {
+            padding: 8px 16px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin-top: 15px;
+            cursor: pointer;
+          }
+        `}</style>
     </div>
   );
 };
 
-export default ProjectsPage; 
+export default ProjectsPage;

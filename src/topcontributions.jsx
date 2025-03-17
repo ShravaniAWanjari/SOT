@@ -17,6 +17,7 @@ const TopContributions = () => {
   const [facultyProjects, setFacultyProjects] = useState([]);
   const [studentResearch, setStudentResearch] = useState([]);
   const [facultyResearch, setFacultyResearch] = useState([]);
+  const [fetchRetries, setFetchRetries] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -137,50 +138,26 @@ const TopContributions = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        // Fetch all forms from the API
-        const response = await fetch(apiConfig.getUrl('api/forms/'));
+        console.log("Fetching data from top_six endpoint...");
+        
+        // Use the optimized top_six endpoint that returns pre-categorized data
+        const response = await fetch(apiConfig.getUrl('/api/forms/top_six/'));
 
         if (!response.ok) {
           throw new Error(`API error: ${response.status}`);
         }
 
+        // The response is already categorized by the backend
         const data = await response.json();
-
-        // Filter for forms marked as top_6 only
-        const topForms = data.filter(item => item.is_top_6 === true);
-
-        // Process and categorize the data
-        const studentAchievements = topForms.filter(item =>
-          item.user_type === 'STUDENT' && item.category === 'achievement'
-        ).slice(0, 6); // Ensure we have max 6 items
-
-        const facultyAchievements = topForms.filter(item =>
-          item.user_type === 'FACULTY' && item.category === 'achievement'
-        ).slice(0, 6);
-
-        const studentProjects = topForms.filter(item =>
-          item.user_type === 'STUDENT' && item.category === 'project'
-        ).slice(0, 6);
-
-        const facultyProjects = topForms.filter(item =>
-          item.user_type === 'FACULTY' && item.category === 'project'
-        ).slice(0, 6);
-
-        const studentResearch = topForms.filter(item =>
-          item.user_type === 'STUDENT' && item.category === 'research'
-        ).slice(0, 6);
-
-        const facultyResearch = topForms.filter(item =>
-          item.user_type === 'FACULTY' && item.category === 'research'
-        ).slice(0, 6);
-
-        // Update state with fetched data
-        setStudentAchievements(studentAchievements);
-        setFacultyAchievements(facultyAchievements);
-        setStudentProjects(studentProjects);
-        setFacultyProjects(facultyProjects);
-        setStudentResearch(studentResearch);
-        setFacultyResearch(facultyResearch);
+        console.log("Fetched pre-categorized data:", data);
+        
+        // Update state with pre-categorized data from the backend
+        setStudentAchievements(data.studentAchievements || []);
+        setFacultyAchievements(data.facultyAchievements || []);
+        setStudentProjects(data.studentProjects || []);
+        setFacultyProjects(data.facultyProjects || []);
+        setStudentResearch(data.studentResearch || []);
+        setFacultyResearch(data.facultyResearch || []);
 
         setLoading(false);
       } catch (error) {
@@ -191,10 +168,17 @@ const TopContributions = () => {
     };
 
     fetchData();
-  }, []);
+  }, [fetchRetries]); // Re-fetch when fetchRetries changes
 
   // Function to handle clicking on a project card
   const handleAPIProjectClick = (project) => {
+    console.log("Project clicked:", project);
+    
+    if (!project) {
+      console.error("Attempted to show details for undefined project");
+      return;
+    }
+    
     // Create a formatted project object for the popup
     const formattedProject = {
       title: project.title || "Untitled Project",
@@ -202,15 +186,23 @@ const TopContributions = () => {
         (project.user_type === 'STUDENT' ? 'Student' : 'Faculty'),
       description: project.description || "No description available",
       fullDescription: project.description || "No description available",
-      technologies: project.tech_stack ? project.tech_stack.split(',').map(tech => tech.trim()) : [],
-      achievements: project.achivements ? project.achivements.split(',').map(achievement => achievement.trim()) : []
+      // Handle both array and string formats for tech_stack
+      technologies: Array.isArray(project.tech_stack) 
+        ? project.tech_stack 
+        : (project.tech_stack ? project.tech_stack.split(',').map(tech => tech.trim()) : []),
+      // Handle both array and string formats for achievements
+      achievements: Array.isArray(project.achivements) 
+        ? project.achivements 
+        : (project.achivements ? project.achivements.split(',').map(achievement => achievement.trim()) : [])
     };
 
+    console.log("Setting selected project:", formattedProject);
     setSelectedProject({ type: 'api', data: formattedProject });
   };
 
   // Function to handle clicking on a hardcoded project card (for ongoing research)
   const handleHardcodedProjectClick = (type, index) => {
+    console.log("Hardcoded project clicked:", type, index);
     setSelectedProject({ type: 'hardcoded', data: projectDetails[type][index] });
   };
 
@@ -236,17 +228,25 @@ const TopContributions = () => {
             <div className="popup-section">
               <h4>Technologies Used</h4>
               <ul>
-                {project.technologies.map((tech, index) => (
-                  <li key={index}>{tech}</li>
-                ))}
+                {project.technologies && project.technologies.length > 0 ? (
+                  project.technologies.map((tech, index) => (
+                    <li key={index}>{tech}</li>
+                  ))
+                ) : (
+                  <li>No technologies specified</li>
+                )}
               </ul>
             </div>
             <div className="popup-section">
               <h4>Achievements</h4>
               <ul>
-                {project.achievements.map((achievement, index) => (
-                  <li key={index}>{achievement}</li>
-                ))}
+                {project.achievements && project.achievements.length > 0 ? (
+                  project.achievements.map((achievement, index) => (
+                    <li key={index}>{achievement}</li>
+                  ))
+                ) : (
+                  <li>No achievements specified</li>
+                )}
               </ul>
             </div>
           </div>
@@ -324,7 +324,7 @@ const TopContributions = () => {
       border-top-color: #e74c3c;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
-      margin0-bottom: 200px;
+      margin-bottom: 20px;
     }
   
     @keyframes spin {
@@ -341,7 +341,6 @@ const TopContributions = () => {
     );
   }
 
-
   const ErrorMessage = ({ error, onRetry }) => (
     <div className="error-message">
       <p>⚠️ Something went wrong: {error}</p>
@@ -355,140 +354,163 @@ const TopContributions = () => {
       text-align: center;
       background-color: black;
       color: #ff4c4c;
-      color: red;
       border: 1px solid #ff4c4c;
       border-radius: 8px;
       margin: 20px auto;
       max-width: 400px;
     }
+    
+    .retry-button {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background-color: #ff4c4c;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .retry-button:hover {
+      background-color: #e03c3c;
+    }
   `;
   
-  // if (error) {
-  //   return (
-  //     <>
-  //       <style>{errorStyles}</style>
-  //       <ErrorMessage error={error} onRetry={() => window.location.reload()} />
-  //     </>
-  //   );
-  // }
-  
-
-  // if (error) {
-  //   return (
-  //     <>
-  //       <style>{emptyStateStyles}</style>
-  //       <div className="error">Error loading data: {error}</div>
-  //     </>
-  //   );
-  // }
-
-
-
-  
+  if (error) {
+    return (
+      <>
+        <style>{errorStyles}</style>
+        <ErrorMessage error={error} onRetry={() => {
+          setError(null);
+          setLoading(true);
+          setFetchRetries(prev => prev + 1);
+        }} />
+      </>
+    );
+  }
 
   // Each card section is now wrapped in a slider component with custom navigation
   return (
     <section className="contributions-section">
-       <div className="research-content">
-    <h2>Recent Achievements</h2>
+      <div className="research-content">
+        <h2>Recent Achievements</h2>
 
-    {/* Students Section */}
-    <h3>Students</h3>
-    {studentAchievements.length > 0 ? (
-      <div className="carousel-container">
-        <SliderArrow direction="prev" sliderRef={studentSliderRef1} />
+        {/* Students Section */}
+        <h3>Students</h3>
+        {studentAchievements.length > 0 ? (
+          <div className="carousel-container">
+            <SliderArrow direction="prev" sliderRef={studentSliderRef1} />
 
-        <Slider ref={studentSliderRef1} {...sliderSettings}>
-          {studentAchievements.map((achievement, index) => (
-            <div key={index} className="card" onClick={() => handleAPIProjectClick(achievement)}>
-              <h4>{achievement.title}</h4>
-              <p className="contributor">{achievement.user?.name || 'Student'}</p>
-              <p>{achievement.description || 'No description available'}</p>
-              <button className="view-details-btn">View Details</button>
-            </div>
-          ))}
-        </Slider>
+            <Slider ref={studentSliderRef1} {...sliderSettings}>
+              {studentAchievements.map((achievement, index) => (
+                <div key={index}>
+                  <div className="card" onClick={() => handleAPIProjectClick(achievement)}>
+                    <h4>{achievement.title}</h4>
+                    <p className="contributor">{achievement.user?.name || 'Student'}</p>
+                    <p>{achievement.description || 'No description available'}</p>
+                    <button className="view-details-btn" onClick={(e) => {
+                      e.stopPropagation(); // Prevent card click
+                      handleAPIProjectClick(achievement);
+                    }}>View Details</button>
+                  </div>
+                </div>
+              ))}
+            </Slider>
 
-        <SliderArrow direction="next" sliderRef={studentSliderRef1} />
+            <SliderArrow direction="next" sliderRef={studentSliderRef1} />
+          </div>
+        ) : (
+          <p className="no-data-message">No top achievements available.</p>
+        )}
+
+        {/* Faculty Section */}
+        <h3>Faculty</h3>
+        {facultyAchievements.length > 0 ? (
+          <div className="carousel-container">
+            <SliderArrow direction="prev" sliderRef={facultySliderRef1} />
+
+            <Slider ref={facultySliderRef1} {...sliderSettings}>
+              {facultyAchievements.map((achievement, index) => (
+                <div key={index}>
+                  <div className="card" onClick={() => handleAPIProjectClick(achievement)}>
+                    <h4>{achievement.title}</h4>
+                    <p className="contributor">{achievement.user?.name || 'Faculty'}</p>
+                    <p>{achievement.description || 'No description available'}</p>
+                    <button className="view-details-btn" onClick={(e) => {
+                      e.stopPropagation(); // Prevent card click
+                      handleAPIProjectClick(achievement);
+                    }}>View Details</button>
+                  </div>
+                </div>
+              ))}
+            </Slider>
+
+            <SliderArrow direction="next" sliderRef={facultySliderRef1} />
+          </div>
+        ) : (
+          <p className="no-data-message">No top achievements available.</p>
+        )}
       </div>
-    ) : (
-      <p className="no-data-message">No top achievements available.</p>
-    )}
 
-    {/* Faculty Section */}
-    <h3>Faculty</h3>
-    {facultyAchievements.length > 0 ? (
-      <div className="carousel-container">
-        <SliderArrow direction="prev" sliderRef={facultySliderRef1} />
+      {/* Best Projects Section */}
+      <div className="research-content">
+        <h2>Best Projects</h2>
 
-        <Slider ref={facultySliderRef1} {...sliderSettings}>
-          {facultyAchievements.map((achievement, index) => (
-            <div key={index} className="card" onClick={() => handleAPIProjectClick(achievement)}>
-              <h4>{achievement.title}</h4>
-              <p className="contributor">{achievement.user?.name || 'Faculty'}</p>
-              <p>{achievement.description || 'No description available'}</p>
-              <button className="view-details-btn">View Details</button>
-            </div>
-          ))}
-        </Slider>
+        {/* Students Section */}
+        <h3>Students</h3>
+        {studentProjects.length > 0 ? (
+          <div className="carousel-container">
+            <SliderArrow direction="prev" sliderRef={studentSliderRef2} />
 
-        <SliderArrow direction="next" sliderRef={facultySliderRef1} />
+            <Slider ref={studentSliderRef2} {...sliderSettings}>
+              {studentProjects.map((project, index) => (
+                <div key={index}>
+                  <div className="card" onClick={() => handleAPIProjectClick(project)}>
+                    <h4>{project.title}</h4>
+                    <p className="contributor">{project.user?.name || 'Student'}</p>
+                    <p>{project.description || 'No description available'}</p>
+                    <button className="view-details-btn" onClick={(e) => {
+                      e.stopPropagation(); // Prevent card click
+                      handleAPIProjectClick(project);
+                    }}>View Details</button>
+                  </div>
+                </div>
+              ))}
+            </Slider>
+
+            <SliderArrow direction="next" sliderRef={studentSliderRef2} />
+          </div>
+        ) : (
+          <p className="no-data-message">No top projects available.</p>
+        )}
+
+        {/* Faculty Section */}
+        <h3>Faculty</h3>
+        {facultyProjects.length > 0 ? (
+          <div className="carousel-container">
+            <SliderArrow direction="prev" sliderRef={facultySliderRef2} />
+
+            <Slider ref={facultySliderRef2} {...sliderSettings}>
+              {facultyProjects.map((project, index) => (
+                <div key={index}>
+                  <div className="card" onClick={() => handleAPIProjectClick(project)}>
+                    <h4>{project.title}</h4>
+                    <p className="contributor">{project.user?.name || 'Faculty'}</p>
+                    <p>{project.description || 'No description available'}</p>
+                    <button className="view-details-btn" onClick={(e) => {
+                      e.stopPropagation(); // Prevent card click
+                      handleAPIProjectClick(project);
+                    }}>View Details</button>
+                  </div>
+                </div>
+              ))}
+            </Slider>
+
+            <SliderArrow direction="next" sliderRef={facultySliderRef2} />
+          </div>
+        ) : (
+          <p className="no-data-message">No top projects available.</p>
+        )}
       </div>
-    ) : (
-      <p className="no-data-message">No top achievements available.</p>
-    )}
-  </div>
-
-  {/* Best Projects Section */}
-  <div className="research-content">
-    <h2>Best Projects</h2>
-
-    {/* Students Section */}
-    <h3>Students</h3>
-    {studentProjects.length > 0 ? (
-      <div className="carousel-container">
-        <SliderArrow direction="prev" sliderRef={studentSliderRef2} />
-
-        <Slider ref={studentSliderRef2} {...sliderSettings}>
-          {studentProjects.map((project, index) => (
-            <div key={index} className="card" onClick={() => handleAPIProjectClick(project)}>
-              <h4>{project.title}</h4>
-              <p className="contributor">{project.user?.name || 'Student'}</p>
-              <p>{project.description || 'No description available'}</p>
-              <button className="view-details-btn">View Details</button>
-            </div>
-          ))}
-        </Slider>
-
-        <SliderArrow direction="next" sliderRef={studentSliderRef2} />
-      </div>
-    ) : (
-      <p className="no-data-message">No top projects available.</p>
-    )}
-
-    {/* Faculty Section */}
-    <h3>Faculty</h3>
-    {facultyProjects.length > 0 ? (
-      <div className="carousel-container">
-        <SliderArrow direction="prev" sliderRef={facultySliderRef2} />
-
-        <Slider ref={facultySliderRef2} {...sliderSettings}>
-          {facultyProjects.map((project, index) => (
-            <div key={index} className="card" onClick={() => handleAPIProjectClick(project)}>
-              <h4>{project.title}</h4>
-              <p className="contributor">{project.user?.name || 'Faculty'}</p>
-              <p>{project.description || 'No description available'}</p>
-              <button className="view-details-btn">View Details</button>
-            </div>
-          ))}
-        </Slider>
-
-        <SliderArrow direction="next" sliderRef={facultySliderRef2} />
-      </div>
-    ) : (
-      <p className="no-data-message">No top projects available.</p>
-    )}
-  </div>
 
       <div className="research-content">
         <h2>Top 6 Ongoing Research Topics</h2><br />
@@ -496,16 +518,19 @@ const TopContributions = () => {
         <div className="carousel-container">
           <SliderArrow direction="prev" sliderRef={studentSliderRef3} />
           <Slider ref={studentSliderRef3} {...sliderSettings} className="card-slider">
-            {Array.from({ length: 6 }).map((_, index) => (
+            {projectDetails.student.slice(0, 6).map((project, index) => (
               <div key={index}>
                 <div
                   className="card"
                   onClick={() => handleHardcodedProjectClick('student', index)}
                 >
-                  <h4>{projectDetails.student[index].title}</h4>
-                  <p className="contributor">{projectDetails.student[index].author}</p>
-                  <p>{projectDetails.student[index].description}</p>
-                  <button className="view-details-btn">View Details</button>
+                  <h4>{project.title}</h4>
+                  <p className="contributor">{project.author}</p>
+                  <p>{project.description}</p>
+                  <button className="view-details-btn" onClick={(e) => {
+                    e.stopPropagation(); // Prevent card click
+                    handleHardcodedProjectClick('student', index);
+                  }}>View Details</button>
                 </div>
               </div>
             ))}
@@ -517,16 +542,19 @@ const TopContributions = () => {
         <div className="carousel-container">
           <SliderArrow direction="prev" sliderRef={facultySliderRef3} />
           <Slider ref={facultySliderRef3} {...sliderSettings} className="card-slider">
-            {Array.from({ length: 6 }).map((_, index) => (
+            {projectDetails.faculty.slice(0, 6).map((project, index) => (
               <div key={index}>
                 <div
                   className="card"
                   onClick={() => handleHardcodedProjectClick('faculty', index)}
                 >
-                  <h4>{projectDetails.faculty[index].title}</h4>
-                  <p className="contributor">{projectDetails.faculty[index].author}</p>
-                  <p>{projectDetails.faculty[index].description}</p>
-                  <button className="view-details-btn">View Details</button>
+                  <h4>{project.title}</h4>
+                  <p className="contributor">{project.author}</p>
+                  <p>{project.description}</p>
+                  <button className="view-details-btn" onClick={(e) => {
+                    e.stopPropagation(); // Prevent card click
+                    handleHardcodedProjectClick('faculty', index);
+                  }}>View Details</button>
                 </div>
               </div>
             ))}
@@ -537,9 +565,7 @@ const TopContributions = () => {
 
       {selectedProject && (
         <ProjectPopup
-          project={selectedProject.type === 'hardcoded'
-            ? selectedProject.data
-            : selectedProject.data}
+          project={selectedProject.data}
         />
       )}
     </section>

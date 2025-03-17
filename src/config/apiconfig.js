@@ -1,5 +1,5 @@
 const apiConfig = {
-    baseUrl: 'https://sot-info-backend.onrender.com',
+    baseUrl: 'https://dev.sajayr.tech',
     
     getUrl(endpoint) {
       const path = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;

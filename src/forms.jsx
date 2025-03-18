@@ -76,24 +76,22 @@ const Forms = () => {
     }
   };
 
-  // Handle input change
-// Handle input change with title validation
-const handleChange = (e) => {
-  const { name, value } = e.target;
+  // Handle input change with title validation
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
-  if (name === "title") {
-    const wordCount = value.trim().split(/\s+/).length;
-    if (wordCount > 4) {
-      setError("Title should not exceed 4 words.");
-      return;
-    } else {
-      setError(null); // Clear the error if within limit
+    if (name === "title") {
+      const wordCount = value.trim().split(/\s+/).length;
+      if (wordCount > 4) {
+        setError("Title should not exceed 4 words.");
+        return;
+      } else {
+        setError(null); // Clear the error if within limit
+      }
     }
-  }
 
-  setFormData({ ...formData, [name]: value });
-};
-
+    setFormData({ ...formData, [name]: value });
+  };
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -153,6 +151,48 @@ const handleChange = (e) => {
     return date.toLocaleDateString();
   };
 
+  // Safely render tech stack badges
+  const renderTechStack = (techStack) => {
+    if (!techStack) return null;
+    
+    // Parse if string, use directly if already array
+    let techItems = [];
+    
+    if (typeof techStack === 'string') {
+      techItems = techStack.split(',').map(item => item.trim()).filter(Boolean);
+    } else if (Array.isArray(techStack)) {
+      techItems = techStack;
+    } else {
+      console.warn('Unexpected tech_stack type:', typeof techStack);
+      return null;
+    }
+    
+    return techItems.map((tech, index) => (
+      <span key={index} className="tech-badge">{tech}</span>
+    ));
+  };
+
+  // Safely render achievements
+  const renderAchievements = (achievements) => {
+    if (!achievements) return null;
+    
+    // Parse if string, use directly if already array
+    let achievementItems = [];
+    
+    if (typeof achievements === 'string') {
+      achievementItems = achievements.split(',').map(item => item.trim()).filter(Boolean);
+    } else if (Array.isArray(achievements)) {
+      achievementItems = achievements;
+    } else {
+      console.warn('Unexpected achievements type:', typeof achievements);
+      return null;
+    }
+    
+    // Only used for display, we're returning null here since achievements
+    // aren't shown in the cards in the original code
+    return null;
+  };
+
   if (!user) {
     return (
       <div className="forms-container">
@@ -190,9 +230,7 @@ const handleChange = (e) => {
                     {formatDate(form.from_date)} - {formatDate(form.to_date)}
                   </div>
                   <div className="tech-stack">
-                    {form.tech_stack.split(',').map((tech, index) => (
-                      <span key={index} className="tech-badge">{tech.trim()}</span>
-                    ))}
+                    {renderTechStack(form.tech_stack)}
                   </div>
                 </div>
               ))}

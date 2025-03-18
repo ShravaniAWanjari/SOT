@@ -190,7 +190,7 @@ const AchievementsPage = () => {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.85);
+    background: rgba(0, 0, 0, 1);
     backdrop-filter: blur(5px);
     display: flex;
     justify-content: center;

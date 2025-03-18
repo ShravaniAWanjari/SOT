@@ -24,6 +24,7 @@ body {
 }
 
 .content-container {
+  background-color: #000000;
   width: 100%;
   display: block; 
 }
@@ -113,6 +114,7 @@ body {
 }
 
 .research-content p {
+  color: #ffffff;
   font-size: 1.1rem;
   line-height: 1.8;
   margin-bottom: 1.5rem;

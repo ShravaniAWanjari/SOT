@@ -106,7 +106,7 @@ const Navbar = () => {
         <Link to="/projects">Projects</Link>
         <Link to="/research">Research</Link>
         <Link to="/placements">Placements</Link>
-        <Link to="/achivements">Achivements</Link>
+        <Link to="/achivements">Achievements</Link>
         
 
         

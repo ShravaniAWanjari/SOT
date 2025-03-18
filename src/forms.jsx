@@ -8,6 +8,8 @@ const Forms = () => {
   const [success, setSuccess] = useState(null);
   const [forms, setForms] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [formToDelete, setFormToDelete] = useState(null);
 
   // Form data state matching Django model fields
   const [formData, setFormData] = useState({
@@ -91,6 +93,59 @@ const Forms = () => {
     }
 
     setFormData({ ...formData, [name]: value });
+  };
+
+  // Handle form deletion
+  const handleDeleteForm = async (formId) => {
+    setFormToDelete(formId);
+    setShowDeleteModal(true);
+  };
+  
+  // Confirm deletion from modal
+  const confirmDelete = async () => {
+    const formId = formToDelete;
+    setShowDeleteModal(false);
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const token = localStorage.getItem('access_token') || localStorage.getItem('token');
+      
+      if (!token) {
+        throw new Error('No authentication token found. Please log in again.');
+      }
+
+      const response = await fetch(apiConfig.getUrl(`api/forms/${formId}/`), {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete entry. Please try again.');
+      }
+
+      // Successfully deleted
+      setSuccess('Entry deleted successfully');
+      
+      // Update the forms list by removing the deleted form
+      setForms(forms.filter(form => form.id !== formId));
+      
+    } catch (err) {
+      console.error('Error deleting form:', err);
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+      
+      // Clear success message after a delay
+      if (!error) {
+        setTimeout(() => {
+          setSuccess(null);
+        }, 3000);
+      }
+    }
   };
 
   // Handle form submission
@@ -223,9 +278,21 @@ const Forms = () => {
             <div className="forms-grid">
               {forms.map(form => (
                 <div className="form-card" key={form.id}>
-                  <h3>{form.title}</h3>
+                  <div className="card-header">
+                    <h3>{form.title}</h3>
+                    <button 
+                      className="delete-btn" 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteForm(form.id);
+                      }}
+                      title="Delete entry"
+                    >
+                      ×
+                    </button>
+                  </div>
                   <span className="category-badge">{form.category}</span>
-                  <p>{form.description.substring(0, 100)}...</p>
+                  <p className="description-text">{form.description}</p>
                   <div className="form-dates">
                     {formatDate(form.from_date)} - {formatDate(form.to_date)}
                   </div>
@@ -357,7 +424,31 @@ const Forms = () => {
           </div>
         </form>
       )}
-    </div>
+          </div>
+      
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="modal-overlay">
+          <div className="delete-modal">
+            <h3>Confirm Deletion</h3>
+            <p>Are you sure you want to delete this entry? This action cannot be undone.</p>
+            <div className="modal-buttons">
+              <button 
+                className="cancel-modal-btn" 
+                onClick={() => setShowDeleteModal(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                className="confirm-delete-btn" 
+                onClick={confirmDelete}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

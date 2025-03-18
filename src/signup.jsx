@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import apiConfig from "./config/apiconfig";
 import './index.css';
+import './styles/login.css';
 
 const SignUp = () => {
     const [activeTab, setActiveTab] = useState('login');

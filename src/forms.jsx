@@ -21,7 +21,8 @@ const Forms = () => {
     achivements: "",
     from_date: "",
     to_date: "",
-    category: ""
+    category: "",
+    is_ongoing: false
   });
 
   // Get user data from localStorage
@@ -44,19 +45,25 @@ const Forms = () => {
     fetchForms();
   }, []);
 
-  // Fetch all forms belonging to the user
+  // Fetch only forms belonging to the current user
   const fetchForms = async () => {
     setIsLoading(true);
     setError(null);
 
     try {
       const token = localStorage.getItem('access_token') || localStorage.getItem('token');
+      const user = getUserFromLocalStorage();
       
       if (!token) {
         throw new Error('No authentication token found. Please log in again.');
       }
 
-      const response = await fetch(apiConfig.getUrl('api/forms/'), {
+      if (!user || !user.id) {
+        throw new Error('User information is missing. Please log in again.');
+      }
+
+      // Get only the current user's forms using dedicated endpoint
+      const response = await fetch(apiConfig.getUrl('api/forms/my_forms/'), {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -65,11 +72,17 @@ const Forms = () => {
       });
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Your session has expired. Please log in again.');
+        }
         throw new Error('Failed to fetch your forms. Please try again.');
       }
 
       const data = await response.json();
-      setForms(data);
+      
+      // Filter forms to only show forms created by the current user
+      const userForms = data.filter(form => form.user && form.user.id === user.id);
+      setForms(userForms);
     } catch (err) {
       console.error('Error fetching forms:', err);
       setError(err.message);
@@ -80,7 +93,13 @@ const Forms = () => {
 
   // Handle input change with title validation
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
+    
+    // Handle checkbox inputs
+    if (type === 'checkbox') {
+      setFormData({ ...formData, [name]: checked });
+      return;
+    }
 
     if (name === "title") {
       const wordCount = value.trim().split(/\s+/).length;
@@ -115,6 +134,7 @@ const Forms = () => {
         throw new Error('No authentication token found. Please log in again.');
       }
 
+      // Fixed URL format - removed the leading slash
       const response = await fetch(apiConfig.getUrl(`api/forms/${formId}/`), {
         method: 'DELETE',
         headers: {
@@ -124,6 +144,13 @@ const Forms = () => {
       });
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Your session has expired. Please log in again.');
+        } else if (response.status === 403) {
+          throw new Error('You do not have permission to delete this entry.');
+        } else if (response.status === 404) {
+          throw new Error('This entry no longer exists.');
+        }
         throw new Error('Failed to delete entry. Please try again.');
       }
 
@@ -148,6 +175,12 @@ const Forms = () => {
     }
   };
 
+  // Convert comma-separated string to array
+  const stringToArray = (str) => {
+    if (!str) return [];
+    return str.split(',').map(item => item.trim()).filter(Boolean);
+  };
+
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -162,22 +195,46 @@ const Forms = () => {
         throw new Error('No authentication token found. Please log in again.');
       }
 
+      // Format data properly for backend - convert string inputs to arrays
+      const submissionData = {
+        ...formData,
+        tech_stack: stringToArray(formData.tech_stack),
+        achivements: stringToArray(formData.achivements),
+        // If to_date is empty and is_ongoing is checked, don't send to_date
+        to_date: formData.is_ongoing ? null : formData.to_date || null
+      };
+
       const response = await fetch(apiConfig.getUrl('api/forms/'), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(submissionData)
       });
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Your session has expired. Please log in again.');
+        }
+        
         const errorData = await response.json();
-        throw new Error(errorData.detail || 'Failed to submit form. Please try again.');
+        if (errorData.detail) {
+          throw new Error(errorData.detail);
+        } else {
+          // Format validation errors
+          const errorMessages = [];
+          for (const field in errorData) {
+            errorMessages.push(`${field}: ${errorData[field].join(' ')}`);
+          }
+          throw new Error(errorMessages.join('. '));
+        }
       }
 
       const data = await response.json();
       setSuccess('Form submitted successfully!');
+      
+      // Reset form data
       setFormData({
         title: "",
         description: "",
@@ -187,8 +244,10 @@ const Forms = () => {
         achivements: "",
         from_date: "",
         to_date: "",
-        category: ""
+        category: "",
+        is_ongoing: false
       });
+      
       setShowForm(false);
       fetchForms(); // Refresh the forms list
     } catch (err) {
@@ -366,6 +425,7 @@ const Forms = () => {
               onChange={handleChange} 
               required 
             />
+            <small>Example: React, Django, Python</small>
           </div>
 
           <div className="form-group">
@@ -387,6 +447,7 @@ const Forms = () => {
               onChange={handleChange} 
               required 
             />
+            <small>Example: Won first prize, Published paper</small>
           </div>
 
           <div className="form-group">
@@ -401,14 +462,27 @@ const Forms = () => {
           </div>
 
           <div className="form-group">
-            <label>To Date (leave empty if ongoing):</label>
+            <label>Is this an ongoing project/research?</label>
             <input 
-              type="date" 
-              name="to_date" 
-              value={formData.to_date} 
+              type="checkbox" 
+              name="is_ongoing" 
+              checked={formData.is_ongoing} 
               onChange={handleChange} 
             />
           </div>
+
+          {!formData.is_ongoing && (
+            <div className="form-group">
+              <label>To Date:</label>
+              <input 
+                type="date" 
+                name="to_date" 
+                value={formData.to_date} 
+                onChange={handleChange} 
+                required={!formData.is_ongoing}
+              />
+            </div>
+          )}
 
           <div className="form-buttons">
             <button type="submit" disabled={isLoading}>

@@ -588,6 +588,16 @@ button[type="submit"]:hover {
   box-shadow: 0 6px 15px rgba(255, 0, 0, 0.6);
   transform: translateY(-2px);
 }
+.description-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0.5rem 0;
+  line-height: 1.5;
+  max-height: 3em; /* 2 lines × 1.5 line height */
+}
 
 .form-card {
   background: rgba(20, 20, 20, 0.85); 
@@ -604,7 +614,25 @@ button[type="submit"]:hover {
   transform: translateY(-5px);
   box-shadow: 0px 10px 25px rgba(255, 0, 0, 0.2); 
 }
+.form-dates {
+  margin-top: auto;
+  padding-top: 0.5rem;
+}
 
+.tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.tech-badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  background-color: #f0f0f0;
+  color: #333;
+}
 .form-card h3 {
   font-size: 20px;
   font-weight: 600;
@@ -720,7 +748,119 @@ button[type="submit"]:hover {
   line-height: 1.4;
   flex-grow: 1;
 }
+/* Add these styles to your index.css or relevant stylesheet */
 
+/* Card header with delete button */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.card-header h3 {
+  margin: 0;
+  padding: 0;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: #ff5555;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0 8px;
+  margin: -8px -5px 0 0;
+  line-height: 1;
+  opacity: 0.7;
+  transition: all 0.2s;
+  font-weight: bold;
+}
+
+.delete-btn:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Delete confirmation modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+}
+
+.delete-modal {
+  background-color: white;
+  border-radius: 8px;
+  padding: 25px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  animation: modal-appear 0.3s ease-out;
+}
+
+@keyframes modal-appear {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.delete-modal h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.delete-modal p {
+  margin-bottom: 20px;
+  color: #555;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.cancel-modal-btn {
+  background-color: #f0f0f0;
+  color: #333;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.cancel-modal-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.confirm-delete-btn {
+  background-color: #ff5555;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.confirm-delete-btn:hover {
+  background-color: #ff3333;
+}
 .view-details-btn {
   background-color: #000;
   color: white;

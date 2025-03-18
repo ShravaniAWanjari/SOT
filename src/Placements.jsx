@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
+import ContactUs from "./contactus";
 import "./index.css"; // Load index.css first
 import "./styles/Placements.css"; // Load placement.css after, so it overrides index.css
 
@@ -69,6 +70,7 @@ const Placements = () => {
   };
   
   return (
+    <div>
     <div className="placements-container">
       <section className="placement-hero">
         <div className="placement-hero-content">
@@ -151,7 +153,16 @@ const Placements = () => {
           <FaArrowRight />
         </div>
       </div>
+     
+
     </div>
+    <ContactUs />
+
+    </div>
+
+
+
+
   );
 };
 

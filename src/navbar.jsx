@@ -76,7 +76,8 @@ const Navbar = () => {
         <Link to="/projects" onClick={() => setMenuOpen(false)}>Projects</Link>
         <Link to="/research" onClick={() => setMenuOpen(false)}>Research</Link>
         <Link to="/placements" onClick={() => setMenuOpen(false)}>Placements</Link>
-        <Link to="/achivements" onClick={() => setMenuOpen(false)}>Achievements</Link>
+        <Link to="/achievements" onClick={() => setMenuOpen(false)}>Achievements</Link>
+        <Link to="/contactpage" onClick={() => setMenuOpen(false)}>Contact</Link>
 
         {isLoggedIn ? (
           <>
@@ -106,7 +107,8 @@ const Navbar = () => {
         <Link to="/projects">Projects</Link>
         <Link to="/research">Research</Link>
         <Link to="/placements">Placements</Link>
-        <Link to="/achivements">Achievements</Link>
+        <Link to="/contactpage">Contact</Link>
+
         
 
         

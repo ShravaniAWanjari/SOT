@@ -19,7 +19,7 @@ const ImageSlider = () => {
       subtitle: "Fostering Innovation and Excellence"
     },
     {
-      image: `${import.meta.env.BASE_URL}images/sos.jpg`,  // Assuming you have more images
+      image: `${import.meta.env.BASE_URL}images/sos.png`,  // Assuming you have more images
       title: "Leading Research and Development",
       subtitle: "Advancing Technology Through Collaborative Innovation"
     },

@@ -152,31 +152,7 @@ body {
   box-shadow: 0px 8px 25px rgba(255, 0, 0, 0.4);
 }
 
-.tabs {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 25px;
-}
 
-.tabs button {
-  flex: 1;
-  padding: 12px;
-  border: 2px solid transparent;
-  background: rgba(255, 255, 255, 0.1);
-  cursor: pointer;
-  font-size: 16px;
-  transition: all 0.3s ease-in-out;
-  border-radius: 5px;
-  font-weight: 600;
-  color: #ccc;
-}
-
-.tabs .active {
-  background: linear-gradient(45deg, #f64758, #ff8e53);
-  color: white;
-  border-color: #ff4b2b;
-  box-shadow: 0px 0px 10px rgba(255, 0, 0, 0.5);
-}
 
 .switch-auth {
   font-size: 14px;

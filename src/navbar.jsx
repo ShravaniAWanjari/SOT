@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { FaBars, FaSignOutAlt, FaTimes } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import "./styles/homepage.css";
+
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -74,7 +76,7 @@ const Navbar = () => {
         <Link to="/projects" onClick={() => setMenuOpen(false)}>Projects</Link>
         <Link to="/research" onClick={() => setMenuOpen(false)}>Research</Link>
         <Link to="/placements" onClick={() => setMenuOpen(false)}>Placements</Link>
-        <Link to="/achivements" onClick={() => setMenuOpen(false)}>achivements</Link>
+        <Link to="/achivements" onClick={() => setMenuOpen(false)}>Achievements</Link>
 
         {isLoggedIn ? (
           <>
@@ -119,7 +121,7 @@ const Navbar = () => {
             />
 
             <div className="dropdown-content">
-              <span>Hello, {getUserDisplayName()}</span>
+              <span>Hello, <br></br>{getUserDisplayName()}</span>
               <button onClick={handleLogout} className="logout-button">
                 <FaSignOutAlt /> Logout
               </button>

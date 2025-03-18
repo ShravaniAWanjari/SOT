@@ -1,0 +1,618 @@
+/* Image Slider Styles - Refined */
+.slider-container {
+    position: relative;
+    width: 100%;
+    height: 80vh;
+    max-height: 800px;
+    overflow: hidden;
+    background-color: #111;
+    margin-top: 0px; /* Space for navbar */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1920px;
+  }
+  
+  .slides-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  .slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s cubic-bezier(0.5, 0, 0.5, 1);
+    overflow: hidden;
+  }
+  
+  .slide-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Adjusted gradient to be stronger on left and bottom */
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.9) 0%,
+      rgba(0, 0, 0, 0.7) 30%,
+      rgba(0, 0, 0, 0.4) 50%,
+      rgba(0, 0, 0, 0.3) 70%,
+      rgba(0, 0, 0, 0.2) 100%
+    );
+    z-index: 1;
+  }
+  
+  .slide-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+    transform: scale(1.05);
+    transition: transform 8s ease;
+  }
+  
+  .slide.active .slide-image {
+    transform: scale(1);
+  }
+  
+  .slide-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    /* Moved text further to left and bottom to avoid faces */
+    padding-left: 5%;
+    padding-bottom: 20%;
+    z-index: 2;
+  }
+  
+  .slide-text-container {
+    max-width: 500px; /* Slightly narrower */
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    transition-delay: 0.3s;
+
+    padding: 24px;
+    border-radius: 8px;
+
+  }
+  
+  .slide.active .slide-text-container {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .slide-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    letter-spacing: -0.5px;
+    position: relative;
+  }
+  
+  .title-underline {
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #fc3c5b, #ff8f70);
+    margin-bottom: 1.5rem;
+    position: relative;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  
+  .title-underline::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+    animation: shimmer 2s infinite;
+  }
+  
+  @keyframes shimmer {
+    100% {
+      left: 100%;
+    }
+  }
+  
+  .slide-subtitle {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+    font-weight: 400;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    max-width: 90%;
+  }
+  
+  /* Removed learn-more-btn styles as requested */
+  
+  /* Navigation Arrows */
+  .slide-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .prev-arrow {
+    left: 30px;
+  }
+  
+  .next-arrow {
+    right: 30px;
+  }
+  
+  .slide-arrow:hover {
+
+    transform: translateY(-50%);
+    border-color: transparent;
+    color: black;
+
+  }
+  
+  .arrow-icon {
+    width: 26px;
+    height: 26px;
+    color: white;
+    transition: transform 0.3s ease;
+  }
+  
+  .prev-arrow:hover .arrow-icon {
+    transform: translateX(-3px);
+  }
+  
+  .next-arrow:hover .arrow-icon {
+    transform: translateX(3px);
+  }
+  
+  /* Progress Indicators */
+  .progress-container {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+    z-index: 10;
+  }
+  
+  .progress-indicator {
+    position: relative;
+    width: 60px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    cursor: pointer;
+    overflow: hidden;
+    padding: 0;
+    border: none;
+    transition: all 0.3s ease;
+  }
+  
+  .progress-indicator:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scaleY(1.3);
+  }
+  
+  .progress-indicator.active {
+    background: rgba(255, 255, 255, 0.3);
+  }
+  
+  .progress-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #fc3c5b;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    box-shadow: 0 0 15px rgba(252, 60, 91, 0.6);
+  }
+  
+  .progress-indicator.active .progress-dot {
+    opacity: 1;
+  }
+  
+  .progress-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, rgba(252, 60, 91, 0.7), #fc3c5b);
+    transform: translateX(-100%);
+    animation: fillProgress linear forwards;
+  }
+  
+  @keyframes fillProgress {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  /* Slide Counter */
+  .slide-counter {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+    padding: 6px 12px;
+    border-radius: 30px;
+  }
+  
+  .current-slide {
+    color: #fc3c5b;
+    font-size: 1.5rem;
+    margin-right: 5px;
+  }
+  
+  .slide-divider {
+    opacity: 0.6;
+    margin: 0 5px;
+  }
+  
+  .total-slides {
+    opacity: 0.7;
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 1200px) {
+    .slider-container {
+      height: 60vh;
+      max-height: 700px;
+    }
+    
+    .slide-text-container {
+      max-width: 450px;
+      padding: 20px;
+    }
+  }
+  
+  @media (max-width: 992px) {
+    .slider-container {
+      height: 55vh;
+      max-height: 600px;
+    }
+    
+    .slide-title {
+      font-size: 2.6rem;
+    }
+    
+    .slide-subtitle {
+      font-size: 1.1rem;
+      max-width: 95%;
+    }
+    
+    .slide-content {
+      padding-left: 5%;
+      padding-bottom: 8%;
+    }
+    
+    .slide-text-container {
+      max-width: 400px;
+      padding: 18px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+
+    .slide-arrow {
+        display: none;
+      }
+      
+    .slider-container {
+      height: 50vh;
+      max-height: 500px;
+    }
+    
+    .slide-title {
+      font-size: 2.2rem;
+    }
+    
+    .slide-subtitle {
+      font-size: 1rem;
+      margin-bottom: 1rem; /* Reduced since no button */
+    }
+    
+    .slide-content {
+      padding-left: 5%;
+      padding-right: 5%;
+      padding-bottom: 15%; /* Move text further up from bottom indicators */
+    }
+    
+    .slide-text-container {
+      max-width: 360px;
+      padding: 16px;
+    }
+    
+    .slide-arrow {
+        color: white;
+      width: 44px;
+      height: 44px;
+    }
+    
+    .prev-arrow {
+      left: 15px;
+    }
+    
+    .next-arrow {
+      right: 15px;
+    }
+    
+    .arrow-icon {
+      width: 2px;
+      height: 20px;
+    }
+    
+    .progress-container {
+      bottom: 30px;
+    }
+    
+    .progress-indicator {
+      width: 60px;
+    }
+    
+    .slide-counter {
+      bottom: 20px;
+      right: 20px;
+      font-size: 0.9rem;
+    }
+    
+    .current-slide {
+      font-size: 1.2rem;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .slide-arrow {
+        display: none;
+      }
+    .slider-container {
+      height: 40vh;
+      max-height: 400px;
+      margin-top: 60px;
+    }
+    
+
+
+    
+    .slide-content {
+      align-items: flex-start; /* Changed to top positioning on mobile */
+      padding-top: 15%; /* Push down from top */
+      padding-bottom: 0;
+      text-align: left; /* Left aligned text */
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+    
+    .slide-text-container {
+      max-width: 100%;
+      padding: 12px;
+
+    }
+    
+    .slide-title {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .title-underline {
+      margin-bottom: 0.8rem;
+    }
+    
+    .slide-subtitle {
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      max-width: 100%;
+    }
+    
+    .progress-container {
+      bottom: 25px;
+    }
+    
+    .progress-indicator {
+      width: 20px;
+      height: 6px;
+    }
+    
+    .slide-counter {
+      bottom: 15px;
+      right: 15px;
+      font-size: 0.5rem;
+      padding: 4px 8px;
+    }
+    
+    .current-slide {
+      font-size: 0.6rem;
+    }
+    
+    .slide-arrow {
+      width: 36px;
+      height: 36px;
+    }
+    
+    .arrow-icon {
+      width: 18px;
+      height: 18px;
+    }
+  }
+  
+  @media (max-width: 420px) {
+    .slide-arrow {
+        display: none;
+      }
+    .slider-container {
+      height: 35vh;
+      min-height: 300px;
+    }
+    
+    .slide-text-container {
+      padding: 10px;
+    }
+    
+    .slide-title {
+      font-size: 1.6rem;
+    }
+    
+    .slide-subtitle {
+      font-size: 0.85rem;
+    }
+  }
+
+
+
+  /* now comes the reserch section */
+  /* Fixed Research Section Styling */
+.section-research {
+    background-color: #000000;
+    color: white;
+    padding: 7rem 0;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* Add some subtle texture to the background */
+  .section-research::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: 30px 30px;
+    opacity: 0.4;
+    z-index: 0;
+  }
+  
+  .container-research {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding-bottom: 0px;
+  }
+  
+  /* Heading styling */
+  .section-heading {
+    color: #f64758;
+    margin-top: 30px;
+    font-size: 3rem;
+    margin-bottom: 4rem;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    position: relative;
+    text-align: center;
+  }
+  
+  
+  
+  /* Stats row styling */
+  .research-section-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+  
+
+  /* Content paragraphs */
+  .research-paragraphs {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 0 1rem;
+  }
+  
+  .research-paragraph {
+    position: relative;
+    padding-left: 1.5rem;
+    font-size: 1.125rem;
+    line-height: 1.85;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.9);
+  }
+  
+  .research-paragraph::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 3px;
+    background-color: #f64758;
+    border-radius: 2px;
+  }
+  
+  .research-paragraph strong {
+    font-weight: 500;
+    color: #ffffff;
+  }
+  
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .section-heading {
+      font-size: 2.5rem;
+    }
+    
+    .research-paragraph {
+      padding-left: 1rem;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .section-heading {
+      font-size: 2.25rem;
+    }
+    
+    .container-research {
+      padding: 0 1.5rem;
+    }
+  }

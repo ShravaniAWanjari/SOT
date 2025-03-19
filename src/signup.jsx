@@ -1,8 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 import apiConfig from "./config/apiconfig";
 import './index.css';
+import './styles/login.css';
 
 const SignUp = () => {
+    const navigate = useNavigate(); 
+    
+    useEffect(() => {
+        const checkTokenExpiration = () => {
+            const tokenExpiry = localStorage.getItem('token_expiry');
+            if (tokenExpiry) {
+                const expiryTime = parseInt(tokenExpiry, 10);
+                const currentTime = new Date().getTime();
+                
+                if (currentTime > expiryTime) {
+                    localStorage.removeItem('access_token');
+                    localStorage.removeItem('refresh_token');
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('token_expiry');
+                    localStorage.removeItem('user');
+                    console.log('Token expired, user logged out automatically');
+                }
+            }
+        };
+        
+        checkTokenExpiration();
+        
+        const interval = setInterval(checkTokenExpiration, 60000);
+        
+        return () => clearInterval(interval);
+    }, [navigate]);
     const [activeTab, setActiveTab] = useState('login');
 
     const [loginData, setLoginData] = useState({
@@ -87,8 +115,10 @@ const SignUp = () => {
             console.log('Login successful, received:', data);
 
             if (data.access) {
-                // Store JWT tokens
+                // Store JWT tokens with expiration (48 hours)
+                const expiryTime = new Date().getTime() + (48 * 60 * 60 * 1000); // 48 hours in milliseconds
                 localStorage.setItem('access_token', data.access);
+                localStorage.setItem('token_expiry', expiryTime.toString());
 
                 if (data.refresh) {
                     localStorage.setItem('refresh_token', data.refresh);
@@ -98,19 +128,28 @@ const SignUp = () => {
                     localStorage.setItem('user', JSON.stringify(data.user));
                 }
 
-                console.log('JWT authentication data saved');
+                console.log('JWT authentication data saved with 48-hour expiration');
                 setSuccess('Login successful!');
+                
+                window.dispatchEvent(new Event("auth_state_changed"));
 
-                // redirect the user here or update app state
-                window.location.href = 'SOT/forms#/forms';
+                navigate('/forms');
             } else {
                 if (data.token) {
+                    const expiryTime = new Date().getTime() + (48 * 60 * 60 * 1000); // 48 hours
                     localStorage.setItem('token', data.token);
+                    localStorage.setItem('token_expiry', expiryTime.toString());
                     if (data.user) {
                         localStorage.setItem('user', JSON.stringify(data.user));
                     }
-                    console.log('Authentication data saved (legacy format)');
+                    console.log('Authentication data saved (legacy format) with 48-hour expiration');
                     setSuccess('Login successful!');
+                    
+                    // Dispatch auth state changed event to update navbar immediately
+                    window.dispatchEvent(new Event("auth_state_changed"));
+                    
+                    // Use React Router's navigate for legacy token as well
+                    navigate('/');
                 } else {
                     throw new Error('No authentication token received from server');
                 }
@@ -331,7 +370,6 @@ const SignUp = () => {
             console.log('OTP resend successful:', data);
             setSuccess('A new OTP has been sent to your email.');
     
-    
         } catch (err) {
             console.error('OTP resend error:', err);
             setError(err.message || 'Failed to resend OTP. Please try again.');
@@ -340,9 +378,6 @@ const SignUp = () => {
         }
     };
     
-    
-    
-
     // Function to handle OTP input change
     const handleOtpChange = (e) => {
         setOtpValue(e.target.value);

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
-import './index.css';
-import ContactUs from "./contactus";
+import React, { useEffect, useState } from "react";
 import apiConfig from "./config/apiconfig";
+import ContactUs from "./contactus";
+import './index.css';
+import './styles/projects.css';
 
 // Cache key for local storage
 const PROJECTS_CACHE_KEY = 'sot_projects_data';
@@ -169,16 +170,151 @@ const ProjectsPage = () => {
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
   }
+
+  const PremiumLoader = () => {
+    return (
+      <div className="premium-loader-container">
+        <div className="premium-loader">
+          <div className="circle-container">
+            <div className="circle circle-1"></div>
+            <div className="circle circle-2"></div>
+            <div className="circle circle-3"></div>
+          </div>
+          
+        </div>
+      </div>
+    );
+  };
+  
+  const FullscreenLoader = () => <PremiumLoader />;
+  
+  const premiumLoaderStyles = `
+  .premium-loader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 1);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  
+  .premium-loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .circle-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+  
+  .circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #e74c3c, #ff7675);
+    box-shadow: 0 0 15px rgba(231, 76, 60, 0.7);
+    animation: pulse 1.5s infinite ease-in-out;
+  }
+  
+  .circle-1 {
+    animation-delay: 0s;
+  }
+  
+  .circle-2 {
+    animation-delay: 0.2s;
+  }
+  
+  .circle-3 {
+    animation-delay: 0.4s;
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(0.8);
+      opacity: 0.6;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 1;
+    }
+  }
+  
+  .loading-text {
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    margin-top: 10px;
+    display: flex;
+  }
+  
+  .loading-text span {
+    animation: fadeInOut 2s infinite ease-in-out;
+    opacity: 0.3;
+    margin: 0 1px;
+  }
+  
+  .loading-text span:nth-child(1) { animation-delay: 0.1s; }
+  .loading-text span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-text span:nth-child(3) { animation-delay: 0.3s; }
+  .loading-text span:nth-child(4) { animation-delay: 0.4s; }
+  .loading-text span:nth-child(5) { animation-delay: 0.5s; }
+  .loading-text span:nth-child(6) { animation-delay: 0.6s; }
+  .loading-text span:nth-child(7) { animation-delay: 0.7s; }
+  .loading-text span:nth-child(8) { animation-delay: 0.8s; }
+  .loading-text span:nth-child(9) { animation-delay: 0.9s; }
+  .loading-text span:nth-child(10) { animation-delay: 1.0s; }
+  
+  @keyframes fadeInOut {
+    0%, 100% {
+      opacity: 0.3;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  
+  /* Add a subtle logo effect (placeholder) */
+  .premium-loader::before {
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(231, 76, 60, 0.1) 0%, rgba(0, 0, 0, 0) 70%);
+    animation: pulse-bg 4s infinite ease-in-out;
+    z-index: -1;
+  }
+  
+  @keyframes pulse-bg {
+    0%, 100% {
+      transform: scale(0.8);
+      opacity: 0.3;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 0.5;
+    }
+  }
+  `;
   
   // Loading state
   if (loading) {
     return (
-      <div className="page-container">
-        <div className="loading-container">
-          <div className="spinner"></div>
-          <p>Loading projects...</p>
-        </div>
-      </div>
+      <>
+      <style>{premiumLoaderStyles}</style>
+      <FullscreenLoader />
+      </>
     );
   }
   
@@ -197,46 +333,46 @@ const ProjectsPage = () => {
   }
   
   return (
-    <div className="page-container">
-        <section className="placement-hero">
-          <div className="placement-hero-content">
-            <h1 className="hero-title">Projects at School of Technology</h1>
-            <p className="hero-description">
+    <div className="projects-page-container">
+        <section className="projects-hero">
+          <div className="projects-hero-content">
+            <h1 className="projects-hero-title">Projects at School of Technology</h1>
+            <p className="projects-hero-description">
               Our students engage in a wide range of innovative projects spanning software development, 
               hardware design, data analysis, and more. These projects provide practical experience 
               and help students apply theoretical knowledge to real-world problems, often in collaboration 
               with industry partners.
             </p>
           </div>
-          <div className="placement-stats">
-            <div className="stat-item">
+          <div className="projects-stats">
+            <div className="projects-stat-item">
               <h2>{projects.length}</h2>
               <p>Active Projects</p>
             </div>
-            <div className="stat-item">
+            <div className="projects-stat-item">
               <h2>25+</h2>
               <p>Industry Partners</p>
             </div>
-            <div className="stat-item">
+            <div className="projects-stat-item">
               <h2>12</h2>
               <p>Award-Winning Projects</p>
             </div>
-            <div className="stat-item">
+            <div className="projects-stat-item">
               <h2>8</h2>
               <p>Research Areas</p>
             </div>
           </div>
         </section>
-        <div className="content-container">
-          <div className="research-section">
-            <div className="research-content">
+        <div className="projects-content-container">
+          <div className="projects-section">
+            <div className="projects-content">
               <h2>Projects at SOT</h2>
               <p>At the School of Technology, projects form an integral part of our curriculum. Students engage in a wide range of projects, from individual assignments to collaborative ventures, covering diverse areas such as software development, hardware design, data analysis, and more.</p>
               <p>These projects provide practical experience and help students apply theoretical knowledge to real-world problems. Many projects are developed in collaboration with industry partners, ensuring relevance and exposure to current industry practices and challenges.</p>
             </div>
           </div>
-          <div className="contributions-section">
-            <div className="research-content">
+          <div className="projects-section">
+            <div className="projects-content">
               <div className="header-with-refresh">
                 <h2>All Projects</h2>
                 <button onClick={refreshData} className="refresh-button" title="Refresh projects">
@@ -254,7 +390,7 @@ const ProjectsPage = () => {
                     <thead>
                       <tr>
                         <th>Project Name</th>
-                        <th>Authors/Developers</th>
+                        <th>Authors</th>
                         <th>Description</th>
                       </tr>
                     </thead>
@@ -298,29 +434,7 @@ const ProjectsPage = () => {
         </div>
         
         {/* Add styles for loading, error, and refresh */}
-        <style jsx>{`
-          .loading-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 300px;
-          }
-          
-          .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-top-color: #007bff;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-bottom: 20px;
-          }
-          
-          @keyframes spin {
-            to { transform: rotate(360deg); }
-          }
-          
+        <style jsx>{`          
           .error-message {
             text-align: center;
             padding: 30px;
@@ -346,6 +460,7 @@ const ProjectsPage = () => {
           }
           
           .refresh-button {
+            margin-top: -25px;
             background: none;
             border: none;
             font-size: 18px;
@@ -353,7 +468,7 @@ const ProjectsPage = () => {
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #007bff;
+            color: #f64758;
             transition: transform 0.3s ease;
           }
           
@@ -362,7 +477,7 @@ const ProjectsPage = () => {
           }
           
           .refresh-icon {
-            font-size: 24px;
+            font-size: 35px;
           }
         `}</style>
     </div>

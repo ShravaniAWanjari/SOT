@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import apiConfig from "./config/apiconfig";
 import "./index.css";
+import './styles/forms.css';
 
 const Forms = () => {
   const [isLoading, setIsLoading] = useState(false);

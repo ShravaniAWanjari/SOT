@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import apiConfig from "./config/apiconfig";
 import ContactUs from "./contactus";
 import './index.css';
+import './styles/projects.css';
 
 // Cache key for local storage
 const PROJECTS_CACHE_KEY = 'sot_projects_data';
@@ -332,46 +333,46 @@ const ProjectsPage = () => {
   }
   
   return (
-    <div className="page-container">
-        <section className="placement-hero">
-          <div className="placement-hero-content">
-            <h1 className="hero-title">Projects at School of Technology</h1>
-            <p className="hero-description">
+    <div className="projects-page-container">
+        <section className="projects-hero">
+          <div className="projects-hero-content">
+            <h1 className="projects-hero-title">Projects at School of Technology</h1>
+            <p className="projects-hero-description">
               Our students engage in a wide range of innovative projects spanning software development, 
               hardware design, data analysis, and more. These projects provide practical experience 
               and help students apply theoretical knowledge to real-world problems, often in collaboration 
               with industry partners.
             </p>
           </div>
-          <div className="placement-stats">
-            <div className="stat-item">
+          <div className="projects-stats">
+            <div className="projects-stat-item">
               <h2>{projects.length}</h2>
               <p>Active Projects</p>
             </div>
-            <div className="stat-item">
+            <div className="projects-stat-item">
               <h2>25+</h2>
               <p>Industry Partners</p>
             </div>
-            <div className="stat-item">
+            <div className="projects-stat-item">
               <h2>12</h2>
               <p>Award-Winning Projects</p>
             </div>
-            <div className="stat-item">
+            <div className="projects-stat-item">
               <h2>8</h2>
               <p>Research Areas</p>
             </div>
           </div>
         </section>
-        <div className="content-container">
-          <div className="research-section">
-            <div className="research-content">
+        <div className="projects-content-container">
+          <div className="projects-section">
+            <div className="projects-content">
               <h2>Projects at SOT</h2>
               <p>At the School of Technology, projects form an integral part of our curriculum. Students engage in a wide range of projects, from individual assignments to collaborative ventures, covering diverse areas such as software development, hardware design, data analysis, and more.</p>
               <p>These projects provide practical experience and help students apply theoretical knowledge to real-world problems. Many projects are developed in collaboration with industry partners, ensuring relevance and exposure to current industry practices and challenges.</p>
             </div>
           </div>
-          <div className="contributions-section">
-            <div className="research-content">
+          <div className="projects-section">
+            <div className="projects-content">
               <div className="header-with-refresh">
                 <h2>All Projects</h2>
                 <button onClick={refreshData} className="refresh-button" title="Refresh projects">
@@ -389,7 +390,7 @@ const ProjectsPage = () => {
                     <thead>
                       <tr>
                         <th>Project Name</th>
-                        <th>Authors/Developers</th>
+                        <th>Authors</th>
                         <th>Description</th>
                       </tr>
                     </thead>
@@ -459,8 +460,8 @@ const ProjectsPage = () => {
           }
           
           .refresh-button {
+            margin-top: -25px;
             background: none;
-
             border: none;
             font-size: 18px;
             cursor: pointer;

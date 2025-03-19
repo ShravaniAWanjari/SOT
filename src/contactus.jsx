@@ -1,5 +1,6 @@
 import React from "react";
 import { FaEnvelope, FaFacebook, FaInstagram, FaLinkedin, FaMapMarkerAlt, FaPhoneAlt, FaTwitter } from "react-icons/fa";
+import './styles/contactus.css';
 
 const ContactUs = () => {
   return (

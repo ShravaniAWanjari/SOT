@@ -1,0 +1,421 @@
+.achievements-page-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .achievements-hero {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f64758;
+    padding: 4rem 8rem; /* Standardized padding */
+    color: white;
+    flex-wrap: wrap;
+    gap: 3rem;
+    min-height: 350px; /* Set minimum height for consistency */
+    height: auto; /* Allow height to adapt to content within min-height constraints */
+  }
+  
+  .achievements-hero-content {
+    max-width: 50%;
+    flex: 1;
+  }
+  
+  .achievements-hero-title {
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+  }
+  
+  .achievements-hero-description {
+    font-size: 1.3rem;
+    line-height: 1.8;
+  }
+  
+  .achievements-stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    flex: 1;
+    max-width: 55%;
+  }
+  
+  .achievements-stat-item {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    width: 160px;
+    transition: transform 0.3s ease;
+    height: 180px; /* Fixed height instead of viewport-relative for consistency */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .achievements-stat-item:hover {
+    transform: translateY(-5px);
+  }
+  
+  .achievements-stat-item h2 {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  
+  .achievements-stat-item p {
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+  }
+  
+  .achievements-content-container {
+    background-color: #000000;
+    width: 100%;
+    display: block; 
+  }
+  
+  .achievements-section {
+    padding: 4rem 0;
+    color: white;
+    background-color: #000000;
+    width: 100%;
+  }
+  
+  .achievements-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    padding-top: 2rem;
+    width: 100%;
+  }
+  
+  .achievements-content h2 {
+    color: #f64758;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    font-weight: 600;
+  }
+  
+  .achievements-content p {
+    color: #ffffff;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+  
+  .achievements-content p:last-child {
+    margin-bottom: 0;
+  }
+  
+  /* Table Styles */
+  .achievements-table-container {
+    width: 100%;
+    margin: 1.5rem 0 3rem; /* Adjusted margin to better space from text above and below */
+    overflow-x: auto;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 2rem;
+  }
+  
+  .achievements-table {
+        margin-left: -2px;
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    background-color: #1a1a1a;
+    color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    border: 1px solid #333;
+  }
+  
+  .achievements-table th {
+    background-color: #2c2c2c;
+    padding: 15px 20px;
+    text-align: left;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+    border-bottom: 2px solid #444;
+    color: #f64758; /* Match the red heading color to maintain design consistency */
+  }
+  
+  .achievements-table td {
+    padding: 15px 20px;
+    border-bottom: 1px solid #333;
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  
+  .achievements-table tr:nth-child(odd) {
+    background-color: rgba(0, 0, 0, 0.2); /* Subtle zebra striping for better readability */
+  }
+  
+  .achievements-table tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .achievements-table tr:hover {
+    background-color: #222222;
+  }
+  
+  /* Make the Project Name column slightly narrower */
+  .achievements-table th:first-child,
+  .achievements-table td:first-child {
+    width: 22%;
+  }
+  
+  /* Make the Authors/Developers column slightly wider */
+  .achievements-table th:nth-child(2),
+  .achievements-table td:nth-child(2) {
+    width: 28%;
+  }
+  
+  /* Make the Description column the widest */
+  .achievements-table th:last-child,
+  .achievements-table td:last-child {
+    width: 50%;
+  }
+  
+  /* Pagination Styles */
+  .pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .pagination {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .page-btn {
+    min-width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    border: 1px solid #333;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  
+  .page-btn:hover {
+    background-color: #2a2a2a;
+    border-color: #444;
+  }
+  
+  .page-btn.active {
+    background-color: #f64758;
+    color: #fff;
+    border-color: #f64758;
+    font-weight: 600;
+  }
+  
+  .page-btn.active:hover {
+    background-color: #e03747;
+  }
+  
+  /* Responsive pagination */
+  @media (max-width: 768px) {
+    .pagination {
+      gap: 0.3rem;
+    }
+    
+    .page-btn {
+      min-width: 2.2rem;
+      height: 2.2rem;
+      font-size: 0.8rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .pagination {
+      gap: 0.2rem;
+    }
+    
+    .page-btn {
+      min-width: 2rem;
+      height: 2rem;
+      font-size: 0.75rem;
+    }
+  }
+  
+  /* Media queries for responsive design */
+  @media (max-width: 1200px) {
+    .achievements-hero {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 4rem 3rem;
+      min-height: 300px; /* Adjusted for smaller screens */
+    }
+  
+    .achievements-hero-content {
+      max-width: 100%;
+    }
+  
+    .achievements-stats {
+      max-width: 100%;
+      justify-content: center;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .achievements-hero {
+      padding: 3rem 2rem;
+      min-height: 250px; /* Adjusted for tablet screens */
+    }
+  
+    .achievements-hero-title {
+      font-size: 2.8rem;
+    }
+  
+    .achievements-hero-description {
+      font-size: 1.1rem;
+    }
+  
+    .achievements-stat-item {
+      width: 140px;
+      height: 160px; /* Consistent height for tablets */
+      padding: 1.5rem;
+    }
+    
+    .achievements-table {
+      font-size: 0.9rem;
+    }
+    
+    .achievements-table th,
+    .achievements-table td {
+      padding: 12px 15px;
+    }
+    
+    /* Stack the table on mobile for better readability */
+    .achievements-table th:first-child,
+    .achievements-table td:first-child,
+    .achievements-table th:nth-child(2),
+    .achievements-table td:nth-child(2),
+    .achievements-table th:last-child,
+    .achievements-table td:last-child {
+      width: auto;
+    }
+    
+    .achievements-section {
+      padding: 2rem 0; /* Adjust padding for the section */
+    }
+    
+    .achievements-content {
+      padding: 0 1rem; /* Reduce padding for smaller screens */
+    }
+  
+    .achievements-content h2 {
+      font-size: 2rem; /* Adjust heading size for smaller screens */
+    }
+  
+    .achievements-content p {
+      font-size: 1rem; /* Adjust paragraph size for smaller screens */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .achievements-hero {
+      padding: 2rem 1rem;
+      min-height: 200px; /* Adjusted for mobile screens */
+    }
+  
+    .achievements-hero-title {
+      font-size: 2.2rem;
+    }
+  
+    .achievements-hero-description {
+      font-size: 1rem;
+    }
+  
+    .achievements-stat-item {
+      width: 120px;
+      height: 140px; /* Consistent height for mobile */
+      padding: 1.5rem;
+    }
+    
+    /* For very small screens, make tables scrollable horizontally */
+    .achievements-table-container {
+      padding-left: 1rem;
+      padding-right: 1rem;
+      overflow-x: auto;
+    }
+    
+    .achievements-section {
+      padding: 1rem 0; /* Further adjust padding for mobile */
+    }
+    
+    .achievements-content {
+      padding: 0 0.5rem; /* Further reduce padding for mobile */
+    }
+  
+    .achievements-content h2 {
+      font-size: 1.8rem; /* Adjust heading size for mobile */
+    }
+  }
+  
+  .achievements-section .achievements-content {
+    margin-bottom: 1rem; /* Add space between the introduction text and the table */
+  }
+  
+  .error-message {
+    text-align: center;
+    padding: 30px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    color: #dc3545;
+  }
+  
+  .retry-button {
+    padding: 8px 16px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    margin-top: 15px;
+    cursor: pointer;
+  }
+  
+  .header-with-refresh {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .refresh-button {
+    margin-top: -25px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #f64758;
+    transition: transform 0.3s ease;
+  }
+  
+  .refresh-button:hover {
+    transform: rotate(180deg);
+  }
+  
+  .refresh-icon {
+    font-size: 35px;
+  }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 import apiConfig from "./config/apiconfig";
 import './index.css';
+import './styles/login.css';
 
 const SignUp = () => {
     const navigate = useNavigate(); 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaBars, FaSignOutAlt, FaTimes } from "react-icons/fa";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./styles/homepage.css";
 
 const Navbar = () => {
@@ -154,6 +154,7 @@ const Navbar = () => {
         <Link to="/research">Research</Link>
         <Link to="/placements">Placements</Link>
         <Link to="/contactpage">Contact</Link>
+        <Link to="/achievements">Achievements</Link>
 
         
         {isLoggedIn && <Link to="/forms">Forms</Link>}

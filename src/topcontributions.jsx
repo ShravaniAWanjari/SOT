@@ -17,6 +17,11 @@ const TopContributions = () => {
   const [facultyProjects, setFacultyProjects] = useState([]);
   const [studentResearch, setStudentResearch] = useState([]);
   const [facultyResearch, setFacultyResearch] = useState([]);
+  
+  // States for ongoing projects
+  const [studentOngoingResearch, setStudentOngoingResearch] = useState([]);
+  const [facultyOngoingResearch, setFacultyOngoingResearch] = useState([]);
+  
   const [fetchRetries, setFetchRetries] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -28,110 +33,6 @@ const TopContributions = () => {
   const facultySliderRef2 = useRef(null);
   const studentSliderRef3 = useRef(null);
   const facultySliderRef3 = useRef(null);
-
-  // Additional project details that would be shown in the popup - only for "Top 6 Ongoing Research Topics"
-  const projectDetails = {
-    student: [
-      {
-        title: "Project Name 1",
-        author: "Student Name 1 - Year 1",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        fullDescription: "This project focuses on innovative solutions for real-world problems. It includes extensive research, implementation, and testing phases. The results have been promising and demonstrate significant potential for practical applications in the field.",
-        technologies: ["React", "Node.js", "MongoDB"],
-        achievements: ["Won 1st prize at Annual Tech Exhibition", "Published in Student Journal of Technology"]
-      },
-      {
-        title: "Project Name 2",
-        author: "Student Name 2 - Year 2",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        fullDescription: "An exploration of cutting-edge technologies and their applications in daily life. This project was developed over two semesters and involved collaboration with industry partners.",
-        technologies: ["Python", "TensorFlow", "AWS"],
-        achievements: ["Selected for National Innovation Challenge", "Patent filed"]
-      },
-      {
-        title: "Project Name 3",
-        author: "Student Name 3 - Year 3",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        fullDescription: "A comprehensive study on sustainable development and its impact on urban infrastructure. The project proposes novel approaches to city planning and resource management.",
-        technologies: ["GIS", "Data Analysis", "Sustainable Models"],
-        achievements: ["Presented at Regional Conference", "Implemented in local community project"]
-      },
-      {
-        title: "Project Name 4",
-        author: "Student Name 4 - Year 4",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        fullDescription: "This project focuses on cybersecurity and data protection in modern digital environments. It includes an in-depth analysis of current threats and proposes robust solutions.",
-        technologies: ["Network Security", "Encryption", "Penetration Testing"],
-        achievements: ["Recognized by Cybersecurity Association", "Implemented in campus network security"]
-      },
-      {
-        title: "Project Name 5",
-        author: "Student Name 5 - Year 5",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        fullDescription: "An innovative approach to healthcare delivery using digital technologies. The project addresses critical gaps in current systems and offers scalable solutions for better patient care.",
-        technologies: ["Health Informatics", "Mobile App Development", "Cloud Infrastructure"],
-        achievements: ["Presented at Health Tech Symposium", "Pilot implementation in local clinic"]
-      },
-      {
-        title: "Project Name 6",
-        author: "Student Name 6 - Year 4",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        fullDescription: "An innovative project exploring the intersection of artificial intelligence and sustainable development. This work demonstrates novel approaches to environmental monitoring and resource optimization.",
-        technologies: ["AI", "IoT", "Environmental Science"],
-        achievements: ["Environmental Innovation Award", "Featured in Sustainability Journal"]
-      }
-    ],
-    faculty: [
-      {
-        title: "Project Name 1",
-        author: "Faculty Name 1 - Assistant Professor",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        fullDescription: "A groundbreaking research initiative that explores new frontiers in the field. This multi-year project has resulted in several publications and has attracted significant grant funding.",
-        technologies: ["Advanced Algorithms", "High-Performance Computing", "AI Models"],
-        achievements: ["Published in top-tier journal", "Received major research grant"]
-      },
-      {
-        title: "Project Name 2",
-        author: "Faculty Name 2 - Assistant Professor",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        fullDescription: "This collaborative research project brings together experts from multiple disciplines to address complex societal challenges. The innovative methodologies developed have wide-ranging applications.",
-        technologies: ["Cross-disciplinary Research", "Statistical Modeling", "Policy Analysis"],
-        achievements: ["Inter-university collaboration established", "Featured in industry publication"]
-      },
-      {
-        title: "Project Name 3",
-        author: "Faculty Name 3 - Assistant Professor",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        fullDescription: "An in-depth study of emerging technologies and their impact on educational methodologies. The project has influenced curriculum development and teaching approaches.",
-        technologies: ["EdTech", "Learning Analytics", "Instructional Design"],
-        achievements: ["Adopted by multiple educational institutions", "Presented at International Education Conference"]
-      },
-      {
-        title: "Project Name 4",
-        author: "Faculty Name 4 - Assistant Professor",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        fullDescription: "A comprehensive investigation into sustainable energy solutions for developing regions. The project has led to practical implementations and policy recommendations.",
-        technologies: ["Renewable Energy", "Sustainable Development", "Policy Framework"],
-        achievements: ["Implemented in rural community projects", "Recognized by Environmental Agency"]
-      },
-      {
-        title: "Project Name 5",
-        author: "Faculty Name 5 - Assistant Professor",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        fullDescription: "This research focuses on advanced materials and their applications in various industries. The innovative approaches have resulted in patent applications and industry partnerships.",
-        technologies: ["Materials Science", "Industrial Applications", "Testing Methodologies"],
-        achievements: ["Two patents filed", "Industry partnership established"]
-      },
-      {
-        title: "Project Name 6",
-        author: "Faculty Name 6 - Professor",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        fullDescription: "A pioneering research program in quantum computing and its applications in cryptography and data security. This work has established new paradigms in the field and attracted international attention.",
-        technologies: ["Quantum Computing", "Cryptography", "Advanced Mathematics"],
-        achievements: ["International Research Excellence Award", "Multi-million dollar research grant"]
-      }
-    ]
-  };
 
   // Fetch data from API
   useEffect(() => {
@@ -158,6 +59,19 @@ const TopContributions = () => {
         setFacultyProjects(data.facultyProjects || []);
         setStudentResearch(data.studentResearch || []);
         setFacultyResearch(data.facultyResearch || []);
+
+        console.log("Fetching data from top_six_ongoing endpoint...");
+        const ongoingResponse = await fetch(apiConfig.getUrl('/api/forms/top_six_ongoing/'));
+        
+        if (!ongoingResponse.ok) {
+          throw new Error(`API error for ongoing projects: ${ongoingResponse.status}`);
+        }
+        
+        const ongoingData = await ongoingResponse.json();
+        console.log("Fetched ongoing projects data:", ongoingData);
+        
+        setStudentOngoingResearch(ongoingData.studentResearch || []);
+        setFacultyOngoingResearch(ongoingData.facultyResearch || []);
 
         setLoading(false);
       } catch (error) {
@@ -198,12 +112,6 @@ const TopContributions = () => {
 
     console.log("Setting selected project:", formattedProject);
     setSelectedProject({ type: 'api', data: formattedProject });
-  };
-
-  // Function to handle clicking on a hardcoded project card (for ongoing research)
-  const handleHardcodedProjectClick = (type, index) => {
-    console.log("Hardcoded project clicked:", type, index);
-    setSelectedProject({ type: 'hardcoded', data: projectDetails[type][index] });
   };
 
   // Function to close the popup
@@ -618,22 +526,28 @@ const TopContributions = () => {
         <div className="carousel-container">
           <SliderArrow direction="prev" sliderRef={studentSliderRef3} />
           <Slider ref={studentSliderRef3} {...sliderSettings} className="card-slider">
-            {projectDetails.student.slice(0, 6).map((project, index) => (
-              <div key={index}>
-                <div
-                  className="card"
-                  onClick={() => handleHardcodedProjectClick('student', index)}
-                >
-                  <h4>{project.title}</h4>
-                  <p className="contributor">{project.author}</p>
-                  <p>{project.description}</p>
-                  <button className="view-details-btn" onClick={(e) => {
-                    e.stopPropagation(); // Prevent card click
-                    handleHardcodedProjectClick('student', index);
-                  }}>View Details</button>
+            {studentOngoingResearch.length > 0 ? (
+              studentOngoingResearch.map((research, index) => (
+                <div key={index}>
+                  <div
+                    className="card"
+                    onClick={() => handleAPIProjectClick(research)}
+                  >
+                    <h4>{research.title}</h4>
+                    <p className="contributor">{research.user?.name || 'Student'}</p>
+                    <p>{research.description || 'No description available'}</p>
+                    <button className="view-details-btn" onClick={(e) => {
+                      e.stopPropagation(); // Prevent card click
+                      handleAPIProjectClick(research);
+                    }}>View Details</button>
+                  </div>
                 </div>
+              ))
+            ) : (
+              <div>
+                <p className="no-data-message">No ongoing research projects available.</p>
               </div>
-            ))}
+            )}
           </Slider>
           <SliderArrow direction="next" sliderRef={studentSliderRef3} />
         </div><br />
@@ -642,22 +556,28 @@ const TopContributions = () => {
         <div className="carousel-container">
           <SliderArrow direction="prev" sliderRef={facultySliderRef3} />
           <Slider ref={facultySliderRef3} {...sliderSettings} className="card-slider">
-            {projectDetails.faculty.slice(0, 6).map((project, index) => (
-              <div key={index}>
-                <div
-                  className="card"
-                  onClick={() => handleHardcodedProjectClick('faculty', index)}
-                >
-                  <h4>{project.title}</h4>
-                  <p className="contributor">{project.author}</p>
-                  <p>{project.description}</p>
-                  <button className="view-details-btn" onClick={(e) => {
-                    e.stopPropagation(); // Prevent card click
-                    handleHardcodedProjectClick('faculty', index);
-                  }}>View Details</button>
+            {facultyOngoingResearch.length > 0 ? (
+              facultyOngoingResearch.map((research, index) => (
+                <div key={index}>
+                  <div
+                    className="card"
+                    onClick={() => handleAPIProjectClick(research)}
+                  >
+                    <h4>{research.title}</h4>
+                    <p className="contributor">{research.user?.name || 'Faculty'}</p>
+                    <p>{research.description || 'No description available'}</p>
+                    <button className="view-details-btn" onClick={(e) => {
+                      e.stopPropagation(); // Prevent card click
+                      handleAPIProjectClick(research);
+                    }}>View Details</button>
+                  </div>
                 </div>
+              ))
+            ) : (
+              <div>
+                <p className="no-data-message">No ongoing research projects available.</p>
               </div>
-            ))}
+            )}
           </Slider>
           <SliderArrow direction="next" sliderRef={facultySliderRef3} />
         </div>
